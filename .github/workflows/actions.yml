@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+          key: 12.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
       - name: NPM Install
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -46,9 +46,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_ICON: https://www.pngitem.com/pimgs/m/69-692608_transparent-answer-icon-png-check-pass-icon-png.png
-          SLACK_USERNAME: node-server-sdk
-          SLACK_TITLE: CI/CD
+          SLACK_ICON: 'https://www.pngitem.com/pimgs/m/69-692608_transparent-answer-icon-png-check-pass-icon-png.png'
+          SLACK_USERNAME: 'node-server-sdk'
+          SLACK_TITLE: 'CI Pipeline'
         if: always() # Pick up events even if the job fails or is canceled.
 
   publish:
@@ -80,11 +80,11 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,action,took
+          fields: repo,message,commit,workflow,took
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_ICON: https://hashtagcauseascene.com/wp-content/uploads/2018/07/npm-logo-red_tn.jpg
-          SLACK_USERNAME: node-server-sdk
-          SLACK_TITLE: Publishing to NPM
-        if: always() # Pick up events even if the job fails or is canceled.
+          SLACK_ICON: 'https://hashtagcauseascene.com/wp-content/uploads/2018/07/npm-logo-red_tn.jpg'
+          SLACK_USERNAME: 'node-server-sdk'
+          SLACK_TITLE: 'Publishing to NPM'
+        if: always()

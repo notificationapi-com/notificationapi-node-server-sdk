@@ -1,6 +1,6 @@
 {
   "name": "notificationapi-node-server-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NotificationAPI server-side library for Node.js",
   "keywords": [
     "notificationapi",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/notificationapi-com/notificationapi-node-server-sdk/issues"
   },
-  "homepage": "https://github.com/notificationapi-com/notificationapi-node-server-sdk#readme",
+  "homepage": "https://www.notificationapi.com",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
