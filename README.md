@@ -30,7 +30,7 @@ notificationapi.init(CLIENT_ID, CLIENT_SECRET)
 
 You can get the clientId and clientSecret from the "API Keys" section of the dashboard.
 
-###3. Identify the user and send them a notification
+### 3. Identify the user and send them a notification
 
 ```
 notificationapi.send(

@@ -46,13 +46,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_ICON: 'https://www.pngitem.com/pimgs/m/69-692608_transparent-answer-icon-png-check-pass-icon-png.png'
-          SLACK_USERNAME: 'node-server-sdk'
-          SLACK_TITLE: 'CI Pipeline'
         if: always() # Pick up events even if the job fails or is canceled.
 
   publish:
-    name: Publish
+    name: publish
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && ( github.ref == 'refs/heads/master' )
@@ -80,11 +77,8 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,commit,workflow,took
+          fields: repo,message,commit,took
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_ICON: 'https://hashtagcauseascene.com/wp-content/uploads/2018/07/npm-logo-red_tn.jpg'
-          SLACK_USERNAME: 'node-server-sdk'
-          SLACK_TITLE: 'Publishing to NPM'
         if: always()
