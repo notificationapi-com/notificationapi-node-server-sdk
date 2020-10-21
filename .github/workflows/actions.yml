@@ -37,6 +37,20 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,action,took
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_ICON: https://www.pngitem.com/pimgs/m/69-692608_transparent-answer-icon-png-check-pass-icon-png.png
+          SLACK_USERNAME: node-server-sdk
+          SLACK_TITLE: CI/CD
+        if: always() # Pick up events even if the job fails or is canceled.
+
   publish:
     name: Publish
     needs: test
@@ -60,12 +74,8 @@ jobs:
         uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-  notify:
-    name: Publish
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
+          NPM_AUTH_TOKEN: ${{ secrets.NODE_SERVER_SDK_NPM_AUTH_TOKEN }}
+
       - name: Send Slack notification
         uses: 8398a7/action-slack@v3
         with:
@@ -74,4 +84,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_ICON: https://hashtagcauseascene.com/wp-content/uploads/2018/07/npm-logo-red_tn.jpg
+          SLACK_USERNAME: node-server-sdk
+          SLACK_TITLE: Publishing to NPM
         if: always() # Pick up events even if the job fails or is canceled.
