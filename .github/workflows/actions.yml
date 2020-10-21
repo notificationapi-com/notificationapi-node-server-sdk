@@ -2,10 +2,10 @@ on:
   push:
     branches:
       - master
-name: CI
+name: CICD
 jobs:
   test:
-    name: Test
+    name: Test & Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,7 +15,15 @@ jobs:
         with:
           node-version: 12
 
+      - name: Cache node_modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
       - name: NPM Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: npm install
 
       - name: Lint
@@ -29,12 +37,40 @@ jobs:
 
       - name: Build
         run: npm run build
+  publish:
+    name: Publish
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && ( github.ref == 'refs/heads/master' )
+    steps:
+      - uses: actions/checkout@v2
 
+      - name: Cache node_modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: 12.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: NPM Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Publish
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  notify:
+    name: Publish
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - name: Send Slack notification
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,commit,action,workflow,took
+          fields: repo,message,action,took
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
