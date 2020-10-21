@@ -2,9 +2,9 @@ on:
   push:
     branches:
       - master
-name: CICD
+name: pipeline
 jobs:
-  test:
+  pipeline:
     name: Test & Build
     runs-on: ubuntu-latest
     steps:
@@ -48,37 +48,18 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always() # Pick up events even if the job fails or is canceled.
 
-  publish:
-    name: publish
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && ( github.ref == 'refs/heads/master' )
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache node_modules
-        id: cache-modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: 12.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-
-      - name: NPM Install
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: npm install
-
       - name: Publish
-        uses: mikeal/merge-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NODE_SERVER_SDK_NPM_AUTH_TOKEN }}
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NODE_SERVER_SDK_NPM_AUTH_TOKEN }}
 
       - name: Send Slack notification
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,commit,took
+          fields: repo,message,action,took
+          text: Published to NPM ${{ steps.publish.outputs.old-version }} -> ${{ steps.publish.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
+        if: steps.publish.type != 'none' && always()
