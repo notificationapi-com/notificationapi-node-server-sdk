@@ -36,7 +36,7 @@ describe('send', () => {
     notificationapi.init(clientId, clientSecret);
     notificationapi.send(notificationId, user);
     expect(mockAxios.post).toHaveBeenCalledWith(
-      `https://s4quar2657.execute-api.us-east-1.amazonaws.com/dev/${clientId}/sender`,
+      `https://api.notificationapi.com/${clientId}/sender`,
       {
         notificationId,
         user
@@ -53,7 +53,7 @@ describe('send', () => {
     notificationapi.init(clientId, clientSecret);
     notificationapi.send(notificationId, user, { x: 'y' });
     expect(mockAxios.post).toHaveBeenCalledWith(
-      `https://s4quar2657.execute-api.us-east-1.amazonaws.com/dev/${clientId}/sender`,
+      `https://api.notificationapi.com/${clientId}/sender`,
       {
         notificationId,
         user,

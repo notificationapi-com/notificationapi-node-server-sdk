@@ -23,7 +23,7 @@ class NotificationAPI {
     mergeTags?: Record<string, string>
   ): Promise<string> => {
     return axios.post(
-      `https://s4quar2657.execute-api.us-east-1.amazonaws.com/dev/${this.clientId}/sender`,
+      `https://api.notificationapi.com/${this.clientId}/sender`,
       {
         notificationId: notificationId,
         user,
