@@ -1,4 +1,4 @@
-import { User } from './interfaces';
+import { SendRequest } from './interfaces';
 import axios from 'axios';
 
 class NotificationAPI {
@@ -17,18 +17,10 @@ class NotificationAPI {
     this.clientSecret = clientSecret;
   };
 
-  send = (
-    notificationId: string,
-    user: User,
-    mergeTags?: Record<string, string>
-  ): Promise<string> => {
+  send = (sendRequest: SendRequest): Promise<string> => {
     return axios.post(
       `https://api.notificationapi.com/${this.clientId}/sender`,
-      {
-        notificationId: notificationId,
-        user,
-        mergeTags
-      },
+      sendRequest,
       {
         headers: {
           Authorization:

@@ -21,6 +21,13 @@ describe('send', () => {
     id: 'userId',
     email: 'test+node_server_sdk@notificationapi.com'
   };
+  const emailOptions = {
+    email: {
+      bccAddresses: ['test@test.com'],
+      ccAddresses: ['test@test.com'],
+      replyToAddresses: ['test@test.com']
+    }
+  };
   const mergeTags = { x: 'y' };
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
@@ -34,7 +41,10 @@ describe('send', () => {
 
   test('send makes valid API call without mergeTags', () => {
     notificationapi.init(clientId, clientSecret);
-    notificationapi.send(notificationId, user);
+    notificationapi.send({
+      user,
+      notificationId
+    });
     expect(mockAxios.post).toHaveBeenCalledWith(
       `https://api.notificationapi.com/${clientId}/sender`,
       {
@@ -51,7 +61,11 @@ describe('send', () => {
 
   test('send makes valid API call with mergeTags', () => {
     notificationapi.init(clientId, clientSecret);
-    notificationapi.send(notificationId, user, { x: 'y' });
+    notificationapi.send({
+      notificationId,
+      user,
+      mergeTags: { x: 'y' }
+    });
     expect(mockAxios.post).toHaveBeenCalledWith(
       `https://api.notificationapi.com/${clientId}/sender`,
       {
@@ -67,7 +81,29 @@ describe('send', () => {
     );
   });
 
-  afterAll(() => {
-    expect(mockAxios.post).toHaveBeenCalledTimes(2);
+  test('send makes valid API call with email options', () => {
+    notificationapi.init(clientId, clientSecret);
+    notificationapi.send({
+      notificationId,
+      user,
+      options: emailOptions
+    });
+    expect(mockAxios.post).toHaveBeenCalledWith(
+      `https://api.notificationapi.com/${clientId}/sender`,
+      {
+        notificationId,
+        user,
+        options: emailOptions
+      },
+      {
+        headers: {
+          Authorization: 'Basic ' + cred
+        }
+      }
+    );
+  });
+
+  test('post has been called the right number of', () => {
+    expect(mockAxios.post).toHaveBeenCalledTimes(3);
   });
 });
