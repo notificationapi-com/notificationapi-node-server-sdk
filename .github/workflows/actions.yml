@@ -38,16 +38,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Send Slack notification
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,action,took
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always() # Pick up events even if the job fails or is canceled.
-
       - name: Publish
         id: publish
         uses: JS-DevTools/npm-publish@v1
