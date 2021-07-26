@@ -7,6 +7,7 @@ export interface SendRequest {
   notificationId: string;
   user: User;
   mergeTags?: Record<string, unknown>;
+  secondaryId?: string;
   options?: {
     email?: {
       replyToAddresses?: string[];
