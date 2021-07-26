@@ -116,6 +116,20 @@ describe('send', () => {
     );
   });
 
+  test('includes secondaryId the request body', async () => {
+    axiosMock.onPost(sendEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.send({
+      notificationId,
+      user,
+      secondaryId: 'secondary'
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data).secondaryId).toEqual(
+      'secondary'
+    );
+  });
+
   test('includes email options in the request body', async () => {
     const emailOptions = {
       email: {
