@@ -177,3 +177,115 @@ describe('send', () => {
     expect(console.log).toHaveBeenCalled();
   });
 });
+
+describe('retract', () => {
+  const retractEndPointRegex = /.*\/sender\/retract/;
+  const notificationId = 'notificationId';
+  const userId = 'userId';
+  const secondaryId = 'secondaryId';
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+
+  test('Returns a Promise<AxiosResponse>', async () => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    const promise = notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(promise).toBeInstanceOf(Promise);
+  });
+
+  test('makes one POST API call', async () => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+  });
+
+  test('makes API calls with basic authorization', async () => {
+    const cred = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].headers['Authorization']).toEqual(
+      'Basic ' + cred
+    );
+  });
+
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/sender/retract`
+    );
+  });
+
+  test('includes given notificationId and userId in the request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual({
+      notificationId,
+      userId
+    });
+  });
+
+  test('includes secondaryId in the request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      notificationId,
+      userId,
+      secondaryId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual({
+      notificationId,
+      userId,
+      secondaryId
+    });
+  });
+
+  test('given 202 http status, it logs', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(202, {
+      message: "it's not 200"
+    });
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      notificationId,
+      userId
+    });
+    expect(console.log).toHaveBeenCalled();
+  });
+
+  test('given 500 http status, it logs and throws', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(500, {
+      message: 'big oof 500'
+    });
+    notificationapi.init(clientId, clientSecret);
+    expect(
+      notificationapi.retract({
+        notificationId,
+        userId
+      })
+    ).rejects.toEqual(new Error('Request failed with status code 500'));
+    expect(console.log).toHaveBeenCalled();
+  });
+});

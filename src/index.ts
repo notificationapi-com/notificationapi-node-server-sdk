@@ -1,5 +1,5 @@
-import { SendRequest } from './interfaces';
-import axios, { AxiosResponse } from 'axios';
+import { RetractRequest, SendRequest } from './interfaces';
+import axios, { AxiosResponse, Method } from 'axios';
 
 class NotificationAPI {
   clientId: null | string = null;
@@ -18,24 +18,42 @@ class NotificationAPI {
   };
 
   send = async (sendRequest: SendRequest): Promise<AxiosResponse> => {
+    return this.request('POST', 'sender', sendRequest);
+  };
+
+  retract = async (retractRequest: RetractRequest): Promise<AxiosResponse> => {
+    return this.request('POST', 'sender/retract', retractRequest);
+  };
+
+  request = async (
+    method: Method,
+    uri: string,
+    data: unknown
+  ): Promise<AxiosResponse> => {
     try {
-      const res = await axios.post(
-        `https://api.notificationapi.com/${this.clientId}/sender`,
-        sendRequest,
-        {
-          headers: {
-            Authorization:
-              'Basic ' +
-              Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
-                'base64'
-              )
-          }
+      const res = await axios.request({
+        method,
+        url: `https://api.notificationapi.com/${this.clientId}/${uri}`,
+        data,
+        headers: {
+          Authorization:
+            'Basic ' +
+            Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
+              'base64'
+            )
         }
-      );
+      });
       if (res.status === 202) {
         console.log('NotificationAPI request ignored.', {
-          request: sendRequest,
-          response: res.data
+          request: {
+            method,
+            uri,
+            data
+          },
+          response: {
+            status: res.status,
+            data: res.data
+          }
         });
       }
       return res;
