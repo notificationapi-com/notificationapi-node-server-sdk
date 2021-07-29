@@ -9,11 +9,15 @@ const restoreConsole = mockConsole();
 
 beforeEach(() => {
   axiosMock.reset();
+  mockConsole();
+});
+
+afterEach(() => {
+  restoreConsole();
 });
 
 afterAll(() => {
   axiosMock.restore();
-  restoreConsole();
 });
 
 describe('init', () => {
@@ -30,6 +34,100 @@ describe('init', () => {
   });
 });
 
+describe('common API behavior', () => {
+  const notificationId = 'notifId';
+  const user = {
+    id: 'userId',
+    email: 'test+node_server_sdk@notificationapi.com'
+  };
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('%s returns a Promise<AxiosResponse>', async (func, params) => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const promise = notificationapi[func](params);
+    expect(promise).toBeInstanceOf(Promise);
+  });
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('%s makes one POST API call', async (func, params) => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await notificationapi[func](params);
+    expect(axiosMock.history.post).toHaveLength(1);
+  });
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('%s makes API calls with basic authorization', async (func, params) => {
+    const cred = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    axiosMock.onPost().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await notificationapi[func](params);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].headers['Authorization']).toEqual(
+      'Basic ' + cred
+    );
+  });
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('given 202 http status, %s logs', async (func, params) => {
+    axiosMock.onPost().reply(202, {
+      message: "it's not 200"
+    });
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await notificationapi[func](params);
+    expect(console.log).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('given 500 http status, %s logs', (func, params) => {
+    axiosMock.onPost().reply(500, {
+      message: 'big oof 500'
+    });
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return notificationapi[func](params).catch(() => {
+      expect(console.error).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  test.each([
+    ['send', { notificationId, user }],
+    ['retract', { notificationId, userId: user.id }]
+  ])('given 500 http status, %s throws', async (func, params) => {
+    axiosMock.onPost().reply(500, {
+      message: 'big oof 500'
+    });
+    notificationapi.init(clientId, clientSecret);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(notificationapi[func](params)).rejects.toEqual(
+      new Error('Request failed with status code 500')
+    );
+  });
+});
+
 describe('send', () => {
   const sendEndPointRegex = /.*\/sender/;
   const notificationId = 'notifId';
@@ -39,40 +137,6 @@ describe('send', () => {
   };
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
-
-  test('Returns a Promise<AxiosResponse>', async () => {
-    axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret);
-    const promise = notificationapi.send({
-      user,
-      notificationId
-    });
-    expect(promise).toBeInstanceOf(Promise);
-  });
-
-  test('makes one POST API call', async () => {
-    axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.send({
-      user,
-      notificationId
-    });
-    expect(axiosMock.history.post).toHaveLength(1);
-  });
-
-  test('makes API calls with basic authorization', async () => {
-    const cred = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    axiosMock.onPost(sendEndPointRegex).reply(200);
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.send({
-      user,
-      notificationId
-    });
-    expect(axiosMock.history.post).toHaveLength(1);
-    expect(axiosMock.history.post[0].headers['Authorization']).toEqual(
-      'Basic ' + cred
-    );
-  });
 
   test('makes API calls to the correct end-point', async () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
@@ -150,32 +214,6 @@ describe('send', () => {
       emailOptions
     );
   });
-
-  test('given 202 http status, it logs', async () => {
-    axiosMock.onPost(sendEndPointRegex).reply(202, {
-      message: "it's not 200"
-    });
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.send({
-      notificationId,
-      user
-    });
-    expect(console.log).toHaveBeenCalled();
-  });
-
-  test('given 500 http status, it logs and throws', async () => {
-    axiosMock.onPost(sendEndPointRegex).reply(500, {
-      message: 'big oof 500'
-    });
-    notificationapi.init(clientId, clientSecret);
-    expect(
-      notificationapi.send({
-        notificationId,
-        user
-      })
-    ).rejects.toEqual(new Error('Request failed with status code 500'));
-    expect(console.log).toHaveBeenCalled();
-  });
 });
 
 describe('retract', () => {
@@ -185,40 +223,6 @@ describe('retract', () => {
   const secondaryId = 'secondaryId';
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
-
-  test('Returns a Promise<AxiosResponse>', async () => {
-    axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret);
-    const promise = notificationapi.retract({
-      userId,
-      notificationId
-    });
-    expect(promise).toBeInstanceOf(Promise);
-  });
-
-  test('makes one POST API call', async () => {
-    axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.retract({
-      userId,
-      notificationId
-    });
-    expect(axiosMock.history.post).toHaveLength(1);
-  });
-
-  test('makes API calls with basic authorization', async () => {
-    const cred = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    axiosMock.onPost(retractEndPointRegex).reply(200);
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.retract({
-      userId,
-      notificationId
-    });
-    expect(axiosMock.history.post).toHaveLength(1);
-    expect(axiosMock.history.post[0].headers['Authorization']).toEqual(
-      'Basic ' + cred
-    );
-  });
 
   test('makes API calls to the correct end-point', async () => {
     axiosMock.onPost(retractEndPointRegex).reply(200);
@@ -261,31 +265,5 @@ describe('retract', () => {
       userId,
       secondaryId
     });
-  });
-
-  test('given 202 http status, it logs', async () => {
-    axiosMock.onPost(retractEndPointRegex).reply(202, {
-      message: "it's not 200"
-    });
-    notificationapi.init(clientId, clientSecret);
-    await notificationapi.retract({
-      notificationId,
-      userId
-    });
-    expect(console.log).toHaveBeenCalled();
-  });
-
-  test('given 500 http status, it logs and throws', async () => {
-    axiosMock.onPost(retractEndPointRegex).reply(500, {
-      message: 'big oof 500'
-    });
-    notificationapi.init(clientId, clientSecret);
-    expect(
-      notificationapi.retract({
-        notificationId,
-        userId
-      })
-    ).rejects.toEqual(new Error('Request failed with status code 500'));
-    expect(console.log).toHaveBeenCalled();
   });
 });
