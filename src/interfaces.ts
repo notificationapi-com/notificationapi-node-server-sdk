@@ -16,3 +16,9 @@ export interface SendRequest {
     };
   };
 }
+
+export interface RetractRequest {
+  notificationId: string;
+  userId: string;
+  secondaryId?: string;
+}
