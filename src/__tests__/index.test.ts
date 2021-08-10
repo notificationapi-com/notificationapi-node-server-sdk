@@ -3,6 +3,7 @@ jest.unmock('axios');
 import axios from 'axios';
 import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
+import { User } from '../interfaces';
 
 const axiosMock = new MockAdapter(axios);
 const restoreConsole = mockConsole();
@@ -36,9 +37,10 @@ describe('init', () => {
 
 describe('common API behavior', () => {
   const notificationId = 'notifId';
-  const user = {
+  const user: User = {
     id: 'userId',
-    email: 'test+node_server_sdk@notificationapi.com'
+    email: 'test+node_server_sdk@notificationapi.com',
+    number: '08310000'
   };
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
@@ -131,9 +133,10 @@ describe('common API behavior', () => {
 describe('send', () => {
   const sendEndPointRegex = /.*\/sender/;
   const notificationId = 'notifId';
-  const user = {
+  const user: User = {
     id: 'userId',
-    email: 'test+node_server_sdk@notificationapi.com'
+    email: 'test+node_server_sdk@notificationapi.com',
+    number: '08310000'
   };
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
