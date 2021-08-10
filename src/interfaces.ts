@@ -1,6 +1,7 @@
 export interface User {
   id: string;
   email?: string;
+  number?: string;
 }
 
 export interface SendRequest {
