@@ -3,7 +3,7 @@ jest.unmock('axios');
 import axios from 'axios';
 import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
-import { User } from '../interfaces';
+import { Channels, User } from '../interfaces';
 
 const axiosMock = new MockAdapter(axios);
 const restoreConsole = mockConsole();
@@ -183,7 +183,7 @@ describe('send', () => {
     );
   });
 
-  test('includes secondaryId the request body', async () => {
+  test('includes secondaryId in the request body', async () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
@@ -196,7 +196,19 @@ describe('send', () => {
       'secondary'
     );
   });
-
+  test('includes forceChannels in the request body', async () => {
+    axiosMock.onPost(sendEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.send({
+      notificationId,
+      user,
+      forceChannels: [Channels.EMAIL]
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data).forceChannels).toEqual([
+      Channels.EMAIL
+    ]);
+  });
   test('includes email options in the request body', async () => {
     const emailOptions = {
       email: {
