@@ -214,7 +214,8 @@ describe('send', () => {
       email: {
         bccAddresses: ['test@test.com'],
         ccAddresses: ['test@test.com'],
-        replyToAddresses: ['test@test.com']
+        replyToAddresses: ['test@test.com'],
+        attachmentURLs: ['https://notificationapi.com']
       }
     };
     axiosMock.onPost(sendEndPointRegex).reply(200);
