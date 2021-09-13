@@ -15,7 +15,7 @@ export interface SendRequest {
       replyToAddresses?: string[];
       ccAddresses?: string[];
       bccAddresses?: string[];
-      attachmentURLs?: string[];
+      attachments?: { name: string; url: string }[];
     };
   };
 }

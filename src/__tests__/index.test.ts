@@ -3,7 +3,7 @@ jest.unmock('axios');
 import axios from 'axios';
 import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
-import { Channels, User } from '../interfaces';
+import { Channels, SendRequest, User } from '../interfaces';
 
 const axiosMock = new MockAdapter(axios);
 const restoreConsole = mockConsole();
@@ -210,12 +210,17 @@ describe('send', () => {
     ]);
   });
   test('includes email options in the request body', async () => {
-    const emailOptions = {
+    const emailOptions: SendRequest['options'] = {
       email: {
         bccAddresses: ['test@test.com'],
         ccAddresses: ['test@test.com'],
         replyToAddresses: ['test@test.com'],
-        attachmentURLs: ['https://notificationapi.com']
+        attachments: [
+          {
+            name: 'Inapp_image_sample',
+            url: 'https://notificationapi.com'
+          }
+        ]
       }
     };
     axiosMock.onPost(sendEndPointRegex).reply(200);
