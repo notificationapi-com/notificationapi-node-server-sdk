@@ -44,21 +44,11 @@ class NotificationAPI {
         }
       });
       if (res.status === 202) {
-        console.log('NotificationAPI request ignored.', {
-          request: {
-            method,
-            uri,
-            data
-          },
-          response: {
-            status: res.status,
-            data: res.data
-          }
-        });
+        console.log('NotificationAPI warning.', res.data);
       }
       return res;
     } catch (e) {
-      console.error('NotificationAPI request error: ', e);
+      console.error('NotificationAPI error.', e);
       throw e;
     }
   };
