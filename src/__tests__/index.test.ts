@@ -88,9 +88,9 @@ describe('common API behavior', () => {
   test.each([
     ['send', { notificationId, user }],
     ['retract', { notificationId, userId: user.id }]
-  ])('given 202, %s logs', async (func, params) => {
+  ])('given 202 http status, %s logs', async (func, params) => {
     axiosMock.onPost().reply(202, {
-      messages: ['some warning']
+      message: "it's not 200"
     });
     notificationapi.init(clientId, clientSecret);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -217,7 +217,7 @@ describe('send', () => {
         replyToAddresses: ['test@test.com'],
         attachments: [
           {
-            name: 'Inapp_image_sample',
+            filename: 'Inapp_image_sample',
             url: 'https://notificationapi.com'
           }
         ]
