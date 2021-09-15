@@ -217,7 +217,7 @@ describe('send', () => {
         replyToAddresses: ['test@test.com'],
         attachments: [
           {
-            name: 'Inapp_image_sample',
+            filename: 'Inapp_image_sample',
             url: 'https://notificationapi.com'
           }
         ]
