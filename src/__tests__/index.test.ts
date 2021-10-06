@@ -237,7 +237,7 @@ describe('send', () => {
   });
 });
 
-describe('retract', () => {
+describe('retract by secondaryId', () => {
   const retractEndPointRegex = /.*\/sender\/retract/;
   const notificationId = 'notificationId';
   const userId = 'userId';
@@ -285,6 +285,57 @@ describe('retract', () => {
       notificationId,
       userId,
       secondaryId
+    });
+  });
+});
+describe('retract by subNotificationId', () => {
+  const retractEndPointRegex = /.*\/sender\/retract/;
+  const notificationId = 'notificationId';
+  const userId = 'userId';
+  const subNotificationId = 'subNotificationId';
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/sender/retract`
+    );
+  });
+
+  test('includes given notificationId and userId in the request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      userId,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual({
+      notificationId,
+      userId
+    });
+  });
+
+  test('includes subNotificationId in the request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.retract({
+      notificationId,
+      userId,
+      subNotificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual({
+      notificationId,
+      userId,
+      subNotificationId
     });
   });
 });

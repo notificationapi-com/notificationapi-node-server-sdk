@@ -23,7 +23,8 @@ export interface SendRequest {
 export interface RetractRequest {
   notificationId: string;
   userId: string;
-  secondaryId?: string;
+  secondaryId?: string; //It will be deprecated soon
+  subNotificationId?: string;
 }
 export enum Channels {
   EMAIL = 'EMAIL',
