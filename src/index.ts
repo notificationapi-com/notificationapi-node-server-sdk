@@ -1,4 +1,8 @@
-import { RetractRequest, SendRequest } from './interfaces';
+import {
+  CreateSubNotification,
+  RetractRequest,
+  SendRequest
+} from './interfaces';
 import axios, { AxiosResponse, Method } from 'axios';
 
 class NotificationAPI {
@@ -23,6 +27,15 @@ class NotificationAPI {
 
   retract = async (retractRequest: RetractRequest): Promise<AxiosResponse> => {
     return this.request('POST', 'sender/retract', retractRequest);
+  };
+  createSubNotification = async (
+    params: CreateSubNotification
+  ): Promise<AxiosResponse> => {
+    return this.request(
+      'PUT',
+      `notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`,
+      { title: params.title }
+    );
   };
 
   request = async (

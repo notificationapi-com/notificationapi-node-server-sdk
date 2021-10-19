@@ -3,7 +3,12 @@ jest.unmock('axios');
 import axios from 'axios';
 import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
-import { Channels, SendRequest, User } from '../interfaces';
+import {
+  Channels,
+  CreateSubNotification,
+  SendRequest,
+  User
+} from '../interfaces';
 
 const axiosMock = new MockAdapter(axios);
 const restoreConsole = mockConsole();
@@ -350,5 +355,29 @@ describe('retract by subNotificationId', () => {
       userId,
       subNotificationId
     });
+  });
+});
+describe('createSubNotification by subNotificationId', () => {
+  const retractEndPointRegex = /.*\/notifications\/.*\/subNotifications\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const params: CreateSubNotification = {
+    notificationId: 'notificationId',
+    title: 'subNotificationTitle',
+    subNotificationId: 'subNotificationId'
+  };
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPut(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.createSubNotification(params);
+    expect(axiosMock.history.put).toHaveLength(1);
+    expect(axiosMock.history.put[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
+    );
+    expect(axiosMock.history.put[0].data).toEqual(
+      JSON.stringify({
+        title: params.title
+      })
+    );
   });
 });

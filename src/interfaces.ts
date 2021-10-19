@@ -27,6 +27,11 @@ export interface RetractRequest {
   secondaryId?: string; //It will be deprecated soon
   subNotificationId?: string;
 }
+export interface CreateSubNotification {
+  notificationId: string;
+  title: string;
+  subNotificationId: string;
+}
 export enum Channels {
   EMAIL = 'EMAIL',
   INAPP_WEB = 'INAPP_WEB',
