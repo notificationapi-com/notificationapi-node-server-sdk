@@ -32,6 +32,10 @@ export interface CreateSubNotification {
   title: string;
   subNotificationId: string;
 }
+export interface DeleteSubNotification {
+  notificationId: string;
+  subNotificationId: string;
+}
 export enum Channels {
   EMAIL = 'EMAIL',
   INAPP_WEB = 'INAPP_WEB',

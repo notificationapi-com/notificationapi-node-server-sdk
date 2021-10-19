@@ -6,6 +6,7 @@ import MockAdapter from 'axios-mock-adapter';
 import {
   Channels,
   CreateSubNotification,
+  DeleteSubNotification,
   SendRequest,
   User
 } from '../interfaces';
@@ -378,6 +379,24 @@ describe('createSubNotification by subNotificationId', () => {
       JSON.stringify({
         title: params.title
       })
+    );
+  });
+});
+describe('deleteSubNotification by subNotificationId', () => {
+  const retractEndPointRegex = /.*\/notifications\/.*\/subNotifications\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const params: DeleteSubNotification = {
+    notificationId: 'notificationId',
+    subNotificationId: 'subNotificationId'
+  };
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onDelete(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.deleteSubNotification(params);
+    expect(axiosMock.history.delete).toHaveLength(1);
+    expect(axiosMock.history.delete[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
     );
   });
 });

@@ -1,5 +1,6 @@
 import {
   CreateSubNotification,
+  DeleteSubNotification,
   RetractRequest,
   SendRequest
 } from './interfaces';
@@ -37,11 +38,18 @@ class NotificationAPI {
       { title: params.title }
     );
   };
-
+  deleteSubNotification = async (
+    params: DeleteSubNotification
+  ): Promise<AxiosResponse> => {
+    return this.request(
+      'DELETE',
+      `notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
+    );
+  };
   request = async (
     method: Method,
     uri: string,
-    data: unknown
+    data?: unknown
   ): Promise<AxiosResponse> => {
     try {
       const res = await axios.request({
