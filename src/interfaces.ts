@@ -27,7 +27,7 @@ export interface RetractRequest {
   secondaryId?: string; //It will be deprecated soon
   subNotificationId?: string;
 }
-export interface CreateSubNotification {
+export interface SubNotificationCreateInput {
   notificationId: string;
   title: string;
   subNotificationId: string;

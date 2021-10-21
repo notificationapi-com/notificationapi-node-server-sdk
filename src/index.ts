@@ -1,5 +1,5 @@
 import {
-  CreateSubNotification,
+  SubNotificationCreateInput,
   DeleteSubNotification,
   RetractRequest,
   SendRequest
@@ -30,7 +30,7 @@ class NotificationAPI {
     return this.request('POST', 'sender/retract', retractRequest);
   };
   createSubNotification = async (
-    params: CreateSubNotification
+    params: SubNotificationCreateInput
   ): Promise<AxiosResponse> => {
     return this.request(
       'PUT',
