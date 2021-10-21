@@ -5,7 +5,7 @@ import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
 import {
   Channels,
-  CreateSubNotification,
+  SubNotificationCreateInput,
   DeleteSubNotification,
   SendRequest,
   User
@@ -362,7 +362,7 @@ describe('createSubNotification by subNotificationId', () => {
   const retractEndPointRegex = /.*\/notifications\/.*\/subNotifications\/.*/;
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
-  const params: CreateSubNotification = {
+  const params: SubNotificationCreateInput = {
     notificationId: 'notificationId',
     title: 'subNotificationTitle',
     subNotificationId: 'subNotificationId'
