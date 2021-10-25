@@ -5,8 +5,8 @@ import notificationapi from '../index';
 import MockAdapter from 'axios-mock-adapter';
 import {
   Channels,
-  SubNotificationCreateInput,
-  DeleteSubNotification,
+  CreateSubNotificationRequest,
+  DeleteSubNotificationRequest,
   SendRequest,
   User
 } from '../interfaces';
@@ -362,7 +362,7 @@ describe('createSubNotification by subNotificationId', () => {
   const retractEndPointRegex = /.*\/notifications\/.*\/subNotifications\/.*/;
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
-  const params: SubNotificationCreateInput = {
+  const params: CreateSubNotificationRequest = {
     notificationId: 'notificationId',
     title: 'subNotificationTitle',
     subNotificationId: 'subNotificationId'
@@ -386,7 +386,7 @@ describe('deleteSubNotification by subNotificationId', () => {
   const retractEndPointRegex = /.*\/notifications\/.*\/subNotifications\/.*/;
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
-  const params: DeleteSubNotification = {
+  const params: DeleteSubNotificationRequest = {
     notificationId: 'notificationId',
     subNotificationId: 'subNotificationId'
   };

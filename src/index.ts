@@ -1,6 +1,6 @@
 import {
-  SubNotificationCreateInput,
-  DeleteSubNotification,
+  CreateSubNotificationRequest,
+  DeleteSubNotificationRequest,
   RetractRequest,
   SendRequest
 } from './interfaces';
@@ -30,7 +30,7 @@ class NotificationAPI {
     return this.request('POST', 'sender/retract', retractRequest);
   };
   createSubNotification = async (
-    params: SubNotificationCreateInput
+    params: CreateSubNotificationRequest
   ): Promise<AxiosResponse> => {
     return this.request(
       'PUT',
@@ -39,7 +39,7 @@ class NotificationAPI {
     );
   };
   deleteSubNotification = async (
-    params: DeleteSubNotification
+    params: DeleteSubNotificationRequest
   ): Promise<AxiosResponse> => {
     return this.request(
       'DELETE',
