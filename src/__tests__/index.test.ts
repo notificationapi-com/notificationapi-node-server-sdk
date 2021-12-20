@@ -446,9 +446,7 @@ describe('setUserPreferences with subNotificationId', () => {
     await notificationapi.init(clientId, clientSecret);
     await notificationapi.setUserPreferences(userId, userPreferences);
     expect(axiosMock.history.post).toHaveLength(1);
-    expect(axiosMock.history.post[0].url).toEqual(
-      `https://api.notificationapi.com/${clientId}/user_preferences/${userId}`
-    );
+
     expect(axiosMock.history.post[0].data).toEqual(
       JSON.stringify(userPreferences)
     );
