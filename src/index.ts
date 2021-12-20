@@ -2,7 +2,8 @@ import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
   RetractRequest,
-  SendRequest
+  SendRequest,
+  SetUserPreferences
 } from './interfaces';
 import axios, { AxiosResponse, Method } from 'axios';
 
@@ -45,6 +46,12 @@ class NotificationAPI {
       'DELETE',
       `notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
     );
+  };
+  setUserPreferences = async (
+    userId: string,
+    userPreferences: SetUserPreferences[]
+  ): Promise<AxiosResponse> => {
+    return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };
   request = async (
     method: Method,
