@@ -8,6 +8,7 @@ import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
   SendRequest,
+  SetUserPreferencesRequest,
   User
 } from '../interfaces';
 
@@ -397,6 +398,62 @@ describe('deleteSubNotification by subNotificationId', () => {
     expect(axiosMock.history.delete).toHaveLength(1);
     expect(axiosMock.history.delete[0].url).toEqual(
       `https://api.notificationapi.com/${clientId}/notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
+    );
+  });
+});
+
+describe('setUserPreferences without subNotificationId', () => {
+  const retractEndPointRegex = /.*\/user_preferences\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const userPreferences: SetUserPreferencesRequest[] = [
+    {
+      notificationId: 'notificationId',
+      channel: Channels.EMAIL,
+      state: true
+    }
+  ];
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/user_preferences/${userId}`
+    );
+  });
+  test('makes API calls with a correct request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].data).toEqual(
+      JSON.stringify(userPreferences)
+    );
+  });
+});
+
+describe('setUserPreferences with subNotificationId', () => {
+  const retractEndPointRegex = /.*\/user_preferences\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const userPreferences: SetUserPreferencesRequest[] = [
+    {
+      notificationId: 'notificationId',
+      channel: Channels.EMAIL,
+      state: true,
+      subNotificationId: 'subNotificationId'
+    }
+  ];
+  test('makes API calls with a correct request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].data).toEqual(
+      JSON.stringify(userPreferences)
     );
   });
 });

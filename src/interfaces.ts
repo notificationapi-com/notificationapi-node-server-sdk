@@ -36,6 +36,12 @@ export interface DeleteSubNotificationRequest {
   notificationId: string;
   subNotificationId: string;
 }
+export interface SetUserPreferencesRequest {
+  notificationId: string;
+  channel: Channels;
+  state: boolean;
+  subNotificationId?: string;
+}
 export enum Channels {
   EMAIL = 'EMAIL',
   INAPP_WEB = 'INAPP_WEB',
