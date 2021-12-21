@@ -8,7 +8,7 @@ import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
   SendRequest,
-  SetUserPreferences,
+  SetUserPreferencesRequest,
   User
 } from '../interfaces';
 
@@ -407,7 +407,7 @@ describe('setUserPreferences without subNotificationId', () => {
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
   const userId = 'testUserId';
-  const userPreferences: SetUserPreferences[] = [
+  const userPreferences: SetUserPreferencesRequest[] = [
     {
       notificationId: 'notificationId',
       channel: Channels.EMAIL,
@@ -439,7 +439,7 @@ describe('setUserPreferences with subNotificationId', () => {
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
   const userId = 'testUserId';
-  const userPreferences: SetUserPreferences[] = [
+  const userPreferences: SetUserPreferencesRequest[] = [
     {
       notificationId: 'notificationId',
       channel: Channels.EMAIL,

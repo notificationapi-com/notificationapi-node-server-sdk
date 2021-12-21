@@ -3,7 +3,7 @@ import {
   DeleteSubNotificationRequest,
   RetractRequest,
   SendRequest,
-  SetUserPreferences
+  SetUserPreferencesRequest
 } from './interfaces';
 import axios, { AxiosResponse, Method } from 'axios';
 
@@ -49,7 +49,7 @@ class NotificationAPI {
   };
   setUserPreferences = async (
     userId: string,
-    userPreferences: SetUserPreferences[]
+    userPreferences: SetUserPreferencesRequest[]
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };

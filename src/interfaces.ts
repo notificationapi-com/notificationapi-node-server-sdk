@@ -36,7 +36,7 @@ export interface DeleteSubNotificationRequest {
   notificationId: string;
   subNotificationId: string;
 }
-export interface SetUserPreferences {
+export interface SetUserPreferencesRequest {
   notificationId: string;
   channel: Channels;
   state: boolean;
