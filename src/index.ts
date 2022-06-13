@@ -1,22 +1,37 @@
 import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
+  InitConfiguration,
   RetractRequest,
   SendRequest,
   SetUserPreferencesRequest
 } from './interfaces';
 import axios, { AxiosResponse, Method } from 'axios';
 
+const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
+
 class NotificationAPI {
   clientId: null | string = null;
   clientSecret: null | string = null;
-  init = (clientId: string, clientSecret: string): void => {
+  baseURL = DEFAULT_BASE_URL;
+
+  init = (
+    clientId: string,
+    clientSecret: string,
+    config?: InitConfiguration
+  ): void => {
     if (!clientId) {
       throw 'Bad clientId';
     }
 
     if (!clientSecret) {
       throw 'Bad clientSecret';
+    }
+
+    if (config?.baseURL) {
+      this.baseURL = config.baseURL;
+    } else {
+      this.baseURL = DEFAULT_BASE_URL;
     }
 
     this.clientId = clientId;
@@ -61,7 +76,7 @@ class NotificationAPI {
     try {
       const res = await axios.request({
         method,
-        url: `https://api.notificationapi.com/${this.clientId}/${uri}`,
+        url: `${this.baseURL}/${this.clientId}/${uri}`,
         data,
         headers: {
           Authorization:
