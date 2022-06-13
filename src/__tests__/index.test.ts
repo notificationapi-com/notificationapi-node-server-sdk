@@ -161,6 +161,21 @@ describe('send', () => {
     );
   });
 
+  test('given a custom api, uses the custom api', async () => {
+    axiosMock.onPost(sendEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret, {
+      baseURL: 'https://www.test.com'
+    });
+    await notificationapi.send({
+      user,
+      notificationId
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://www.test.com/${clientId}/sender`
+    );
+  });
+
   test('includes given notificationId and user in the request body', async () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);

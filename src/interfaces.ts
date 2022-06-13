@@ -48,3 +48,7 @@ export enum Channels {
   SMS = 'SMS',
   CALL = 'CALL'
 }
+
+export interface InitConfiguration {
+  baseURL?: string;
+}
