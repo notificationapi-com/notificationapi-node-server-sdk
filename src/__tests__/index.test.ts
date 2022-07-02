@@ -218,6 +218,21 @@ describe('send', () => {
       'secondary'
     );
   });
+
+  test('includes templateId in the request body', async () => {
+    axiosMock.onPost(sendEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.send({
+      notificationId,
+      user,
+      templateId: 'templateId'
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data).templateId).toEqual(
+      'templateId'
+    );
+  });
+
   test('includes subNotificationId in the request body', async () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);

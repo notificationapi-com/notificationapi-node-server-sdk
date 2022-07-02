@@ -10,6 +10,7 @@ export interface SendRequest {
   mergeTags?: Record<string, unknown>;
   forceChannels?: Channels[];
   secondaryId?: string; //It will be deprecated soon
+  templateId?: string;
   subNotificationId?: string;
   options?: {
     email?: {
