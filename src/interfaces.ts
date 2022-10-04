@@ -8,6 +8,7 @@ export interface SendRequest {
   notificationId: string;
   user: User;
   mergeTags?: Record<string, unknown>;
+  replace?: Record<string, string>;
   forceChannels?: Channels[];
   secondaryId?: string; //It will be deprecated soon
   templateId?: string;

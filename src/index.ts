@@ -45,6 +45,7 @@ class NotificationAPI {
   retract = async (retractRequest: RetractRequest): Promise<AxiosResponse> => {
     return this.request('POST', 'sender/retract', retractRequest);
   };
+
   createSubNotification = async (
     params: CreateSubNotificationRequest
   ): Promise<AxiosResponse> => {
@@ -54,6 +55,7 @@ class NotificationAPI {
       { title: params.title }
     );
   };
+
   deleteSubNotification = async (
     params: DeleteSubNotificationRequest
   ): Promise<AxiosResponse> => {
@@ -62,12 +64,14 @@ class NotificationAPI {
       `notifications/${params.notificationId}/subNotifications/${params.subNotificationId}`
     );
   };
+
   setUserPreferences = async (
     userId: string,
     userPreferences: SetUserPreferencesRequest[]
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };
+
   request = async (
     method: Method,
     uri: string,
