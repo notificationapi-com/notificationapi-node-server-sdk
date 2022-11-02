@@ -14,7 +14,7 @@ class NotificationAPI {
   clientId: null | string = null;
   clientSecret: null | string = null;
   baseURL = DEFAULT_BASE_URL;
-
+  /** To configure and initialize the the SDK*/
   init = (
     clientId: string,
     clientSecret: string,
@@ -66,7 +66,9 @@ class NotificationAPI {
   };
   /** Used to set notification preferences from a specified user. */
   setUserPreferences = async (
+    /** The ID of the user in your system. Required.*/
     userId: string,
+    /** An array of preferences fo the user. Required.*/
     userPreferences: SetUserPreferencesRequest[]
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
