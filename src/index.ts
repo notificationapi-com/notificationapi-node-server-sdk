@@ -73,7 +73,7 @@ class NotificationAPI {
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };
-  /** Used to api requests */
+  /** A generic function for sending any requests to NotificationAPI.*/
   request = async (
     method: Method,
     uri: string,
