@@ -86,7 +86,9 @@ export enum Channels {
   EMAIL = 'EMAIL',
   INAPP_WEB = 'INAPP_WEB',
   SMS = 'SMS',
-  CALL = 'CALL'
+  CALL = 'CALL',
+  PUSH = 'PUSH',
+  WEB_PUSH = 'WEB_PUSH'
 }
 /** To configure the SDK*/
 export interface InitConfiguration {
