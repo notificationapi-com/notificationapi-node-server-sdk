@@ -11,6 +11,7 @@ import {
   SetUserPreferencesRequest,
   User
 } from '../interfaces';
+import { createHmac } from 'crypto';
 
 const axiosMock = new MockAdapter(axios);
 const restoreConsole = mockConsole();
@@ -499,6 +500,30 @@ describe('setUserPreferences with subNotificationId', () => {
     expect(axiosMock.history.post).toHaveLength(1);
     expect(axiosMock.history.post[0].data).toEqual(
       JSON.stringify(userPreferences)
+    );
+  });
+});
+describe('Identify user', () => {
+  const userEndPointRegex = /.*\/users\/.*/;
+  const clientId = 'testClientId_identify_user';
+  const clientSecret = 'testClientSecret_identify_user';
+  const userId = 'testUserId_identify_user';
+  const user = { id: userId };
+  test('makes API calls with a correct request body', async () => {
+    axiosMock.onPost(userEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.identifyUser({ id: userId });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].data).toEqual(JSON.stringify(user));
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/users/${userId}`
+    );
+    expect(axiosMock.history.post[0].headers.Authorization).toEqual(
+      `Basic ${Buffer.from(
+        `${clientId}:${userId}:${createHmac('sha256', clientSecret)
+          .update(`${userId}`)
+          .digest('base64')}`
+      ).toString('base64')}`
     );
   });
 });
