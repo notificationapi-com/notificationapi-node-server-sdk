@@ -7,6 +7,7 @@ import {
   Channels,
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
+  PushProviders,
   SendRequest,
   SetUserPreferencesRequest,
   User
@@ -508,15 +509,45 @@ describe('Identify user', () => {
   const clientId = 'testClientId_identify_user';
   const clientSecret = 'testClientSecret_identify_user';
   const userId = 'testUserId_identify_user';
-  const user = { id: userId };
+  const user: User = {
+    id: userId,
+    email: 'test+node_server_sdk@notificationapi.com',
+    number: '+15005550006',
+    pushTokens: [
+      {
+        type: PushProviders.FCM,
+        token: 'samplePushToken',
+        device: {
+          app_id: 'sample_app_id',
+          ad_id: 'sample_ad_id',
+          device_id: 'sample_device_id',
+          platform: 'sample_platform',
+          manufacturer: 'sample_manufacturer',
+          model: 'sample_model'
+        }
+      }
+    ],
+    webPushTokens: [
+      {
+        sub: {
+          endpoint: 'sample_endpoint',
+          keys: {
+            p256dh: 'sample_p256dh',
+            auth: 'sample_auth'
+          }
+        }
+      }
+    ]
+  };
   test('makes API calls with a correct request body', async () => {
     axiosMock.onPost(userEndPointRegex).reply(200);
     await notificationapi.init(clientId, clientSecret);
-    await notificationapi.identifyUser({ id: userId });
+    await notificationapi.identifyUser(user);
+    const { id, ...userData } = user;
     expect(axiosMock.history.post).toHaveLength(1);
-    expect(axiosMock.history.post[0].data).toEqual(JSON.stringify(user));
+    expect(axiosMock.history.post[0].data).toEqual(JSON.stringify(userData));
     expect(axiosMock.history.post[0].url).toEqual(
-      `https://api.notificationapi.com/${clientId}/users/${userId}`
+      `https://api.notificationapi.com/${clientId}/users/${id}`
     );
     expect(axiosMock.history.post[0].headers.Authorization).toEqual(
       `Basic ${Buffer.from(
