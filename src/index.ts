@@ -41,20 +41,19 @@ class NotificationAPI {
   };
   /** used to identify your user */
   identifyUser = async (user: User): Promise<AxiosResponse> => {
+    const { id, ...userData } = user;
     const hashedUserId = `${createHmac('sha256', this.clientSecret as string)
-      .update(user.id)
+      .update(id)
       .digest('base64')}`;
 
     const customAuthorization =
       'Basic ' +
-      Buffer.from(`${this.clientId}:${user.id}:${hashedUserId}`).toString(
-        'base64'
-      );
+      Buffer.from(`${this.clientId}:${id}:${hashedUserId}`).toString('base64');
 
     return this.request(
       'POST',
-      `users/${encodeURIComponent(user.id)}`,
-      user,
+      `users/${encodeURIComponent(id)}`,
+      userData,
       customAuthorization
     );
   };
