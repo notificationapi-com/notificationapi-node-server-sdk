@@ -5,6 +5,10 @@ export interface User {
   email?: string;
   /** Required for SMS/CALL notifications, otherwise optional. Valid format: +15005550006. Unformatted US/Canada numbers are also accepted, e.g., (415) 555-1212, 415-555-1212, or 4155551212.*/
   number?: string;
+  /**Tokens which are required to send mobile push notifications, a user can have multiple devices and a push token is required for each device*/
+  pushTokens?: PushToken[];
+  /**Tokens which are required to send web push notification, a user can have multiple devices and a web push token is required for each device */
+  webPushTokens?: WebPushToken[];
 }
 
 export interface SendRequest {
@@ -94,4 +98,54 @@ export enum Channels {
 export interface InitConfiguration {
   /** To updated the based url. Optional.*/
   baseURL?: string;
+}
+
+export interface PushToken {
+  /**[apn | fcm] The provider token is to be associated with. */
+  type: PushProviders;
+  /**The full token string. */
+  token: string;
+  /**Information about the device the token is associated with. */
+  device: Device;
+}
+
+export enum PushProviders {
+  /**firebase-fcm token provider */
+  FCM = 'FCM',
+  /**APN token provider */
+  APN = 'APN'
+}
+
+export interface Device {
+  /**Id of the application the token is used for */
+  app_id?: string;
+  /**Id of the advertising identifier */
+  ad_id?: string;
+  /**Id of the device the token is associated with */
+  device_id: string;
+  /**The device platform i.e. android, ios*/
+  platform?: string;
+  /**The device manufacturer */
+  manufacturer?: string;
+  /**The device model */
+  model?: string;
+}
+
+/**
+ * Configuration for a Push Subscription. This can be obtained on the frontend by calling
+ * serviceWorkerRegistration.pushManager.subscribe().
+ * The expected format is the same output as JSON.stringify'ing a PushSubscription in the browser.
+ */
+export interface PushSubscription {
+  /**a string value containing the endpoint associated with the push subscription. */
+  endpoint: string;
+  keys: {
+    /**An Elliptic curve Diffie–Hellman public key on the P-256 curve (that is, the NIST secp256r1 elliptic curve). The resulting key is an uncompressed point in ANSI X9.62 format. */
+    p256dh: string;
+    /**An authentication secret, as described in Message Encryption for Web Push. */
+    auth: string;
+  };
+}
+export interface WebPushToken {
+  sub: PushSubscription;
 }

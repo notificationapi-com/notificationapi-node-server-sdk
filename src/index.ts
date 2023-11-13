@@ -4,9 +4,11 @@ import {
   InitConfiguration,
   RetractRequest,
   SendRequest,
-  SetUserPreferencesRequest
+  SetUserPreferencesRequest,
+  User
 } from './interfaces';
 import axios, { AxiosResponse, Method } from 'axios';
+import { createHmac } from 'crypto';
 
 const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
@@ -36,6 +38,24 @@ class NotificationAPI {
 
     this.clientId = clientId;
     this.clientSecret = clientSecret;
+  };
+  /** used to identify your user */
+  identifyUser = async (user: User): Promise<AxiosResponse> => {
+    const { id, ...userData } = user;
+    const hashedUserId = `${createHmac('sha256', this.clientSecret as string)
+      .update(id)
+      .digest('base64')}`;
+
+    const customAuthorization =
+      'Basic ' +
+      Buffer.from(`${this.clientId}:${id}:${hashedUserId}`).toString('base64');
+
+    return this.request(
+      'POST',
+      `users/${encodeURIComponent(id)}`,
+      userData,
+      customAuthorization
+    );
   };
   /** Used to send a notification to the specified user. */
   send = async (sendRequest: SendRequest): Promise<AxiosResponse> => {
@@ -77,19 +97,20 @@ class NotificationAPI {
   request = async (
     method: Method,
     uri: string,
-    data?: unknown
+    data?: unknown,
+    customAuthorization?: string
   ): Promise<AxiosResponse> => {
+    const authorization: string =
+      customAuthorization ??
+      'Basic ' +
+        Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
     try {
       const res = await axios.request({
         method,
         url: `${this.baseURL}/${this.clientId}/${uri}`,
         data,
         headers: {
-          Authorization:
-            'Basic ' +
-            Buffer.from(`${this.clientId}:${this.clientSecret}`).toString(
-              'base64'
-            )
+          Authorization: authorization
         }
       });
       if (res.status === 202) {
