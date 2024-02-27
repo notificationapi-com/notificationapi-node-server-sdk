@@ -24,6 +24,8 @@ export interface SendRequest {
   forceChannels?: Channels[];
   /** It will be deprecated soon.*/
   secondaryId?: string; //It will be deprecated soon
+  /**An ISO 8601 datetime string to schedule the notification for. For example, '2024-02-20T14:38:03.509Z' */
+  schedule?: string;
   /** By default, notifications are sent using the default template of each channel. You can permanently change the default template from the dashboard. However, you can also use this parameter to force using a specific template. Optional.*/
   templateId?: string;
   /**  The subNotificationId is used to specify further subcategories within a notification. Optional.*/

@@ -247,7 +247,20 @@ describe('send', () => {
       'templateId'
     );
   });
-
+  test('includes schedule in the request body', async () => {
+    axiosMock.onPost(sendEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    const schedule = new Date().toISOString();
+    await notificationapi.send({
+      notificationId,
+      user,
+      schedule
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(JSON.parse(axiosMock.history.post[0].data).schedule).toEqual(
+      schedule
+    );
+  });
   test('includes subNotificationId in the request body', async () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
