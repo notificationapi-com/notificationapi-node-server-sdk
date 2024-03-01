@@ -461,6 +461,44 @@ describe('deleteSubNotification by subNotificationId', () => {
     );
   });
 });
+describe('updateSchedule by trackingId', () => {
+  const updateScheduleEndPointRegex = /.*\/schedule/;
+  const trackingId = 'trackingId';
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const mergeTags = { x: 'y' };
+  const sendRequest: Partial<SendRequest> = {
+    mergeTags,
+    schedule: '2024-02-20T14:38:03.509Z'
+  };
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPatch(updateScheduleEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.updateSchedule(trackingId, sendRequest);
+    expect(axiosMock.history.patch).toHaveLength(1);
+    expect(axiosMock.history.patch[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/schedule/${trackingId}`
+    );
+    expect(axiosMock.history.patch[0].data).toEqual(
+      JSON.stringify(sendRequest)
+    );
+  });
+});
+describe('deleteSchedule by trackingId', () => {
+  const deleteScheduleEndPointRegex = /.*\/schedule/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const trackingId = 'trackingId';
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onDelete(deleteScheduleEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.deleteSchedule(trackingId);
+    expect(axiosMock.history.delete).toHaveLength(1);
+    expect(axiosMock.history.delete[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/schedule/${trackingId}`
+    );
+  });
+});
 
 describe('setUserPreferences without subNotificationId', () => {
   const retractEndPointRegex = /.*\/user_preferences\/.*/;
