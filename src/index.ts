@@ -93,6 +93,17 @@ class NotificationAPI {
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };
+  /** Used to to update a scheduled notification. */
+  updateSchedule = async (
+    trackingId: string,
+    sendRequest: Partial<SendRequest>
+  ) => {
+    return this.request('PATCH', `schedule/${trackingId}`, sendRequest);
+  };
+  /** Used to to delete a scheduled notification. */
+  deleteSchedule = async (trackingId: string) => {
+    return this.request('DELETE', `schedule/${trackingId}`);
+  };
   /** A generic function for sending any requests to NotificationAPI.*/
   request = async (
     method: Method,
