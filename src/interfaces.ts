@@ -40,6 +40,10 @@ export interface SendRequest {
       ccAddresses?: string[];
       /** An array of emails to be BCC'ed on the email notifications. Optional.*/
       bccAddresses?: string[];
+      /** A name that is displayed as the "from" field. Example: "Name <fromaddress>". Optional. */
+      fromName?: string;
+      /** An address that is displayed as the "from" field. Example: "Name <fromaddress>". Optional. */
+      fromAddress?: string;
       /** An array of publicly accessible URLs and filenames pointing to files that you wish to include as attachments.
        * The URLs only need to be valid for a few minutes after calling the SDK method. After that, the public URLs can be disabled for privacy. The maximum email size (including the content and all attachments) is 10MB.
        * File extensions in the filename property are necessary for the file to show up nicely in the recipient's device. Optional.*/
