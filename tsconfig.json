@@ -5,7 +5,7 @@
     "lib": ["es6"],
     "declaration": true,
     "outDir": "./lib",
-    "removeComments": true,
+    "removeComments": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true
