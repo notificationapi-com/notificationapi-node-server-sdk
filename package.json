@@ -17,14 +17,18 @@
     "url": "https://github.com/notificationapi-com/notificationapi-node-server-sdk/issues"
   },
   "homepage": "https://www.notificationapi.com",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "type": "module",
+  "types": "./lib/types",
+  "exports": {
+    "import": "./lib/esm/index.js",
+    "require": "./lib/cjs/index.js"
+  },
   "files": [
     "lib/**/*"
   ],
   "scripts": {
     "test": "jest --collectCoverage",
-    "build": "tsc",
+    "build": "tsc & tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json && node scripts/build",
     "lint": "eslint . --ext .ts",
     "prettier-check": "prettier --config .prettierrc './**/*.ts' --check"
   },
