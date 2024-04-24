@@ -4,7 +4,7 @@
     "module": "commonjs",
     "target": "ES3",
     "outDir": "./lib/cjs",
-    "declaration": false,
-    "emitDeclarationOnly": false,
+    "declaration": true,
+    "emitDeclarationOnly": false
     }
 }

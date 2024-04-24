@@ -18,17 +18,18 @@
   },
   "homepage": "https://www.notificationapi.com",
   "type": "module",
-  "types": "./lib/types",
   "exports": {
-    "import": "./lib/esm/index.js",
-    "require": "./lib/cjs/index.js"
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    }
   },
   "files": [
-    "lib/**/*"
+    "./lib/**/*"
   ],
   "scripts": {
     "test": "jest --collectCoverage",
-    "build": "tsc & tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json && node scripts/build",
+    "build": "tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json && node scripts/build",
     "lint": "eslint . --ext .ts",
     "prettier-check": "prettier --config .prettierrc './**/*.ts' --check"
   },

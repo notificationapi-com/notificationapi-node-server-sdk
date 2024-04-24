@@ -1,11 +1,6 @@
 {
     "compilerOptions": {
-      "module": "ES6",
       "strict": true,
-      "lib": ["es6"],
-      "declaration": true,
-      "emitDeclarationOnly": true,
-      "outDir": "./lib/types",
       "removeComments": false,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
