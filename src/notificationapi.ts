@@ -13,6 +13,9 @@ import { createHmac } from 'crypto';
 const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
 class NotificationAPIService {
+  private USER_AGENT = 'notificationapi-node-server-sdk';
+  private VERSION = '1.0.0';
+
   clientId: null | string = null;
   clientSecret: null | string = null;
   baseURL = DEFAULT_BASE_URL;
@@ -121,7 +124,8 @@ class NotificationAPIService {
         url: `${this.baseURL}/${this.clientId}/${uri}`,
         data,
         headers: {
-          Authorization: authorization
+          Authorization: authorization,
+          'User-Agent': `${this.USER_AGENT}/${this.VERSION}`
         }
       });
       if (res.status === 202) {
