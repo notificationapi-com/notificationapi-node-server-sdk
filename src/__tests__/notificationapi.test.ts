@@ -1,7 +1,7 @@
 import mockConsole from 'jest-mock-console';
 jest.unmock('axios');
 import axios from 'axios';
-import notificationapi from '../index';
+import notificationapi from '../notificationapi';
 import MockAdapter from 'axios-mock-adapter';
 import {
   Channels,
