@@ -1,6 +1,6 @@
 {
   "name": "notificationapi-node-server-sdk",
-  "version": "0.21.0",
+  "version": "1.0.0",
   "description": "NotificationAPI server-side library for Node.js",
   "keywords": [
     "notificationapi",
@@ -17,14 +17,19 @@
     "url": "https://github.com/notificationapi-com/notificationapi-node-server-sdk/issues"
   },
   "homepage": "https://www.notificationapi.com",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  },
   "files": [
-    "lib/**/*"
+    "./lib/**/*"
   ],
   "scripts": {
     "test": "jest --collectCoverage",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json && node scripts/build",
     "lint": "eslint . --ext .ts",
     "prettier-check": "prettier --config .prettierrc './**/*.ts' --check"
   },
