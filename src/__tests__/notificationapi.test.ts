@@ -619,6 +619,9 @@ describe('deleteUserPreferences without subNotificationId', () => {
   const clientSecret = 'testClientSecret';
   const userId = 'testUserId';
   const notificationId = 'testNotificationId';
+  const hashedUserId = `${createHmac('sha256', clientSecret)
+    .update(userId)
+    .digest('base64')}`;
 
   test('makes API calls to the correct end-point', async () => {
     axiosMock.onDelete(retractEndPointRegex).reply(200);
@@ -629,6 +632,10 @@ describe('deleteUserPreferences without subNotificationId', () => {
       `https://api.notificationapi.com/${clientId}/users/${userId}/preferences`
     );
     expect(axiosMock.history.delete[0].params).toEqual({ notificationId });
+    expect(axiosMock.history.delete[0].headers.Authorization).toEqual(
+      'Basic ' +
+        Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
+    );
   });
 });
 describe('deleteUserPreferences with subNotificationId', () => {
@@ -638,6 +645,9 @@ describe('deleteUserPreferences with subNotificationId', () => {
   const userId = 'testUserId';
   const notificationId = 'testNotificationId';
   const subNotificationId = 'testSubNotificationId';
+  const hashedUserId = `${createHmac('sha256', clientSecret)
+    .update(userId)
+    .digest('base64')}`;
 
   test('makes API calls to the correct end-point', async () => {
     axiosMock.onDelete(retractEndPointRegex).reply(200);
@@ -655,6 +665,10 @@ describe('deleteUserPreferences with subNotificationId', () => {
       notificationId,
       subNotificationId
     });
+    expect(axiosMock.history.delete[0].headers.Authorization).toEqual(
+      'Basic ' +
+        Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
+    );
   });
 });
 describe('Identify user', () => {
