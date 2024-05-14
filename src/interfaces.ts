@@ -86,8 +86,6 @@ export interface SetUserPreferencesRequest {
   notificationId: string;
   /** The channel related to the userPreferences. Optional */
   channel?: string;
-  /** Determines the state of the notification. Optional */
-  state?: boolean;
   /** The method for delivering the notification. Optional */
   delivery?: 'off' | 'instant' | 'hourly' | 'daily' | 'weekly' | 'monthly';
   /** The subNotificationId is used to specify further subcategories within a notification. Optional */

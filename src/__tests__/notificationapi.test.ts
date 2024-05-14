@@ -567,8 +567,7 @@ describe('setUserPreferences without subNotificationId', () => {
   const userPreferences: SetUserPreferencesRequest[] = [
     {
       notificationId: 'notificationId',
-      channel: Channels.EMAIL,
-      state: true
+      channel: Channels.EMAIL
     }
   ];
   test('makes API calls to the correct end-point', async () => {
@@ -600,7 +599,6 @@ describe('setUserPreferences with subNotificationId', () => {
     {
       notificationId: 'notificationId',
       channel: Channels.EMAIL,
-      state: true,
       subNotificationId: 'subNotificationId'
     }
   ];
