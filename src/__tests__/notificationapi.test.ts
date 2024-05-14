@@ -500,6 +500,65 @@ describe('deleteSchedule by trackingId', () => {
   });
 });
 
+describe('setUserPreferences with notificationId only', () => {
+  const retractEndPointRegex = /.*\/user_preferences\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const userPreferences: SetUserPreferencesRequest[] = [
+    {
+      notificationId: 'notificationId'
+    }
+  ];
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/user_preferences/${userId}`
+    );
+  });
+  test('makes API calls with a correct request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].data).toEqual(
+      JSON.stringify(userPreferences)
+    );
+  });
+});
+describe('setUserPreferences with notificationId and delivery', () => {
+  const retractEndPointRegex = /.*\/user_preferences\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const userPreferences: SetUserPreferencesRequest[] = [
+    {
+      notificationId: 'notificationId',
+      delivery: 'weekly'
+    }
+  ];
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/user_preferences/${userId}`
+    );
+  });
+  test('makes API calls with a correct request body', async () => {
+    axiosMock.onPost(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.setUserPreferences(userId, userPreferences);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].data).toEqual(
+      JSON.stringify(userPreferences)
+    );
+  });
+});
 describe('setUserPreferences without subNotificationId', () => {
   const retractEndPointRegex = /.*\/user_preferences\/.*/;
   const clientId = 'testClientId';
