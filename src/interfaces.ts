@@ -82,13 +82,13 @@ export interface DeleteSubNotificationRequest {
   subNotificationId: string;
 }
 export interface SetUserPreferencesRequest {
-  /** The ID of the notification in NotificationAPI. Required.*/
+  /** The ID of the notification in NotificationAPI. Required. */
   notificationId: string;
-  /** The channel related to the userPreferences. Required.*/
-  channel: Channels;
-  /** Determines the . Required.*/
-  state: boolean;
-  /**  The subNotificationId is used to specify further subcategories within a notification. Required.*/
+  /** The channel related to the userPreferences. Optional */
+  channel?: string;
+  /** The method for delivering the notification. Optional */
+  delivery?: 'off' | 'instant' | 'hourly' | 'daily' | 'weekly' | 'monthly';
+  /** The subNotificationId is used to specify further subcategories within a notification. Optional */
   subNotificationId?: string;
 }
 /** Supporting notification Channels.*/
