@@ -614,6 +614,51 @@ describe('setUserPreferences with subNotificationId', () => {
     );
   });
 });
+
+describe('deleteUserPreferences without subNotificationId', () => {
+  const retractEndPointRegex = /.*\/users\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const notificationId = 'testNotificationId';
+
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onDelete(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.deleteUserPreferences(userId, notificationId);
+    expect(axiosMock.history.delete).toHaveLength(1);
+    expect(axiosMock.history.delete[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/users/${userId}/preferences`
+    );
+    expect(axiosMock.history.delete[0].params).toEqual({ notificationId });
+  });
+});
+describe('deleteUserPreferences with subNotificationId', () => {
+  const retractEndPointRegex = /.*\/users\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const notificationId = 'testNotificationId';
+  const subNotificationId = 'testSubNotificationId';
+
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onDelete(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.deleteUserPreferences(
+      userId,
+      notificationId,
+      subNotificationId
+    );
+    expect(axiosMock.history.delete).toHaveLength(1);
+    expect(axiosMock.history.delete[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/users/${userId}/preferences`
+    );
+    expect(axiosMock.history.delete[0].params).toEqual({
+      notificationId,
+      subNotificationId
+    });
+  });
+});
 describe('Identify user', () => {
   const userEndPointRegex = /.*\/users\/.*/;
   const clientId = 'testClientId_identify_user';

@@ -96,6 +96,25 @@ class NotificationAPIService {
   ): Promise<AxiosResponse> => {
     return this.request('POST', `user_preferences/${userId}`, userPreferences);
   };
+  /** Used to delete any stored preferences for a user and notificationId or subNotificationId. */
+  deleteUserPreferences = async (
+    /** The ID of the user in your system. Required.*/
+    userId: string,
+    /** The ID of the notification in NotificationAPI. Required. */
+    notificationId: string,
+    /** The subNotificationId is used to specify further subcategories within a notification. Optional */
+    subNotificationId?: string
+  ): Promise<AxiosResponse> => {
+    return this.request(
+      'DELETE',
+      `users/${userId}/preferences`,
+      null,
+      undefined,
+      subNotificationId
+        ? { notificationId, subNotificationId }
+        : { notificationId }
+    );
+  };
   /** Used to to update a scheduled notification. */
   updateSchedule = async (
     trackingId: string,
@@ -112,7 +131,8 @@ class NotificationAPIService {
     method: Method,
     uri: string,
     data?: unknown,
-    customAuthorization?: string
+    customAuthorization?: string,
+    queryStrings?: Record<string, string>
   ): Promise<AxiosResponse> => {
     const authorization: string =
       customAuthorization ??
@@ -122,6 +142,7 @@ class NotificationAPIService {
       const res = await axios.request({
         method,
         url: `${this.baseURL}/${this.clientId}/${uri}`,
+        params: queryStrings,
         data,
         headers: {
           Authorization: authorization,
