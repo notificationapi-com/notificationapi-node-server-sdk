@@ -1,6 +1,7 @@
 import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
+  InAppNotificationPatchRequest,
   InitConfiguration,
   RetractRequest,
   SendRequest,
@@ -14,7 +15,7 @@ const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.0.1';
+  private VERSION = '2.1.0';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
@@ -123,7 +124,30 @@ class NotificationAPIService {
         : { notificationId }
     );
   };
-  /** Used to to update a scheduled notification. */
+
+  /** Used to update the opened, archived, ... of an inapp notification. */
+  updateInAppNotification = async (
+    /** The ID of the user in your system. Required.*/
+    userId: string,
+    params: InAppNotificationPatchRequest
+  ) => {
+    const hashedUserId = `${createHmac('sha256', this.clientSecret as string)
+      .update(userId)
+      .digest('base64')}`;
+    const customAuthorization =
+      'Basic ' +
+      Buffer.from(`${this.clientId}:${userId}:${hashedUserId}`).toString(
+        'base64'
+      );
+    return this.request(
+      'PATCH',
+      `users/${userId}/notifications/INAPP_WEB`,
+      params,
+      customAuthorization
+    );
+  };
+
+  /** Used to update a scheduled notification. */
   updateSchedule = async (
     trackingId: string,
     sendRequest: Partial<SendRequest>

@@ -155,3 +155,15 @@ export interface PushSubscription {
 export interface WebPushToken {
   sub: PushSubscription;
 }
+export interface InAppNotificationPatchRequest {
+  trackingIds: string[];
+  opened?: string;
+  clicked?: string;
+  archived?: string;
+  actioned1?: string;
+  actioned2?: string;
+  reply?: {
+    date: string;
+    message: string;
+  };
+}

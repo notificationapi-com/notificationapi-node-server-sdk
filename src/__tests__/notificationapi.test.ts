@@ -7,6 +7,7 @@ import {
   Channels,
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
+  InAppNotificationPatchRequest,
   PushProviders,
   SendRequest,
   SetUserPreferencesRequest,
@@ -666,6 +667,39 @@ describe('deleteUserPreferences with subNotificationId', () => {
       subNotificationId
     });
     expect(axiosMock.history.delete[0].headers.Authorization).toEqual(
+      'Basic ' +
+        Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
+    );
+  });
+});
+describe('updateInAppNotification without subNotificationId', () => {
+  const retractEndPointRegex = /.*\/users\/.*/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+  const userId = 'testUserId';
+  const hashedUserId = `${createHmac('sha256', clientSecret)
+    .update(userId)
+    .digest('base64')}`;
+  const params: Required<InAppNotificationPatchRequest> = {
+    trackingIds: ['testTrackingId'],
+    opened: '1970-01-01T00:00:00.000Z',
+    clicked: '1970-01-01T00:00:00.000Z',
+    archived: '1970-01-01T00:00:00.000Z',
+    actioned1: '1970-01-01T00:00:00.000Z',
+    actioned2: '1970-01-01T00:00:00.000Z',
+    reply: { date: '1970-01-01T00:00:00.000Z', message: 'nice!' }
+  };
+
+  test('makes API calls to the correct end-point', async () => {
+    axiosMock.onPatch(retractEndPointRegex).reply(200);
+    await notificationapi.init(clientId, clientSecret);
+    await notificationapi.updateInAppNotification(userId, params);
+    expect(axiosMock.history.patch).toHaveLength(1);
+    expect(axiosMock.history.patch[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/users/${userId}/notifications/INAPP_WEB`
+    );
+    expect(axiosMock.history.patch[0].params).toEqual(undefined);
+    expect(axiosMock.history.patch[0].headers.Authorization).toEqual(
       'Basic ' +
         Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
     );
