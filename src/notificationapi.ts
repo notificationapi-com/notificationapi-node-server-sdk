@@ -14,7 +14,7 @@ const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.0.0';
+  private VERSION = '2.0.1';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
@@ -105,11 +105,19 @@ class NotificationAPIService {
     /** The subNotificationId is used to specify further subcategories within a notification. Optional */
     subNotificationId?: string
   ): Promise<AxiosResponse> => {
+    const hashedUserId = `${createHmac('sha256', this.clientSecret as string)
+      .update(userId)
+      .digest('base64')}`;
+    const customAuthorization =
+      'Basic ' +
+      Buffer.from(`${this.clientId}:${userId}:${hashedUserId}`).toString(
+        'base64'
+      );
     return this.request(
       'DELETE',
       `users/${userId}/preferences`,
       null,
-      undefined,
+      customAuthorization,
       subNotificationId
         ? { notificationId, subNotificationId }
         : { notificationId }
