@@ -167,3 +167,17 @@ export interface InAppNotificationPatchRequest {
     message: string;
   };
 }
+export interface LogQueryPostBody {
+  dateRangeFilter?: {
+    startTime?: number;
+    endTime?: number;
+  };
+  notificationFilter?: string[];
+  channelFilter?: Channels[];
+  userFilter?: string[];
+  statusFilter?: string[];
+  trackingIds?: string[];
+  requestFilter?: string[];
+  envIdFilter?: string[];
+  customFilter?: string;
+}

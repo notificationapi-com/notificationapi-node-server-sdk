@@ -8,6 +8,7 @@ import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
   InAppNotificationPatchRequest,
+  LogQueryPostBody,
   PushProviders,
   SendRequest,
   SetUserPreferencesRequest,
@@ -315,6 +316,46 @@ describe('send', () => {
     expect(JSON.parse(axiosMock.history.post[0].data).options).toEqual(
       emailOptions
     );
+  });
+});
+describe('logQuery', () => {
+  const logQueryEndPointRegex = /.*\/logs\/query/;
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+
+  test('makes API calls to the correct end-point, non custom', async () => {
+    const nonCostumeQuery: LogQueryPostBody = {
+      dateRangeFilter: { startTime: 1715904000000, endTime: 1718668799999 },
+      notificationFilter: ['test'],
+      channelFilter: [Channels.CALL],
+      userFilter: ['test+node_server_sdk@notificationapi.com'],
+      statusFilter: ['FAILURE'],
+      trackingIds: ['e2d6987f-52c'],
+      envIdFilter: [clientId]
+    };
+    axiosMock.onPost(logQueryEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.logQuery(nonCostumeQuery);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/logs/query`
+    );
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual(nonCostumeQuery);
+  });
+  test('makes API calls to the correct end-point, custom', async () => {
+    const nonCostumeQuery: LogQueryPostBody = {
+      dateRangeFilter: { startTime: 1715904000000, endTime: 1718668799999 },
+      customFilter:
+        'fields @message| filter @logStream like /NotificationsSummary/| sort @timestamp desc'
+    };
+    axiosMock.onPost(logQueryEndPointRegex).reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.logQuery(nonCostumeQuery);
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(axiosMock.history.post[0].url).toEqual(
+      `https://api.notificationapi.com/${clientId}/logs/query`
+    );
+    expect(JSON.parse(axiosMock.history.post[0].data)).toEqual(nonCostumeQuery);
   });
 });
 
