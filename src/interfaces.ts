@@ -167,7 +167,7 @@ export interface InAppNotificationPatchRequest {
     message: string;
   };
 }
-export interface LogQueryPostBody {
+export interface queryLogsPostBody {
   dateRangeFilter?: {
     startTime?: number;
     endTime?: number;

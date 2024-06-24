@@ -8,7 +8,7 @@ import {
   CreateSubNotificationRequest,
   DeleteSubNotificationRequest,
   InAppNotificationPatchRequest,
-  LogQueryPostBody,
+  queryLogsPostBody,
   PushProviders,
   SendRequest,
   SetUserPreferencesRequest,
@@ -318,13 +318,13 @@ describe('send', () => {
     );
   });
 });
-describe('logQuery', () => {
-  const logQueryEndPointRegex = /.*\/logs\/query/;
+describe('queryLogs', () => {
+  const queryLogsEndPointRegex = /.*\/logs\/query/;
   const clientId = 'testClientId';
   const clientSecret = 'testClientSecret';
 
   test('makes API calls to the correct end-point, non custom', async () => {
-    const nonCostumeQuery: LogQueryPostBody = {
+    const nonCostumeQuery: queryLogsPostBody = {
       dateRangeFilter: { startTime: 1715904000000, endTime: 1718668799999 },
       notificationFilter: ['test'],
       channelFilter: [Channels.CALL],
@@ -333,9 +333,9 @@ describe('logQuery', () => {
       trackingIds: ['e2d6987f-52c'],
       envIdFilter: [clientId]
     };
-    axiosMock.onPost(logQueryEndPointRegex).reply(200);
+    axiosMock.onPost(queryLogsEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
-    await notificationapi.logQuery(nonCostumeQuery);
+    await notificationapi.queryLogs(nonCostumeQuery);
     expect(axiosMock.history.post).toHaveLength(1);
     expect(axiosMock.history.post[0].url).toEqual(
       `https://api.notificationapi.com/${clientId}/logs/query`
@@ -343,14 +343,14 @@ describe('logQuery', () => {
     expect(JSON.parse(axiosMock.history.post[0].data)).toEqual(nonCostumeQuery);
   });
   test('makes API calls to the correct end-point, custom', async () => {
-    const nonCostumeQuery: LogQueryPostBody = {
+    const nonCostumeQuery: queryLogsPostBody = {
       dateRangeFilter: { startTime: 1715904000000, endTime: 1718668799999 },
       customFilter:
         'fields @message| filter @logStream like /NotificationsSummary/| sort @timestamp desc'
     };
-    axiosMock.onPost(logQueryEndPointRegex).reply(200);
+    axiosMock.onPost(queryLogsEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
-    await notificationapi.logQuery(nonCostumeQuery);
+    await notificationapi.queryLogs(nonCostumeQuery);
     expect(axiosMock.history.post).toHaveLength(1);
     expect(axiosMock.history.post[0].url).toEqual(
       `https://api.notificationapi.com/${clientId}/logs/query`

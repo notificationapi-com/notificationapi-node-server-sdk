@@ -3,7 +3,7 @@ import {
   DeleteSubNotificationRequest,
   InAppNotificationPatchRequest,
   InitConfiguration,
-  LogQueryPostBody,
+  queryLogsPostBody,
   RetractRequest,
   SendRequest,
   SetUserPreferencesRequest,
@@ -71,7 +71,7 @@ class NotificationAPIService {
     return this.request('POST', 'sender/retract', retractRequest);
   };
   /** create a query on logs */
-  logQuery = async (params: LogQueryPostBody): Promise<AxiosResponse> => {
+  queryLogs = async (params: queryLogsPostBody): Promise<AxiosResponse> => {
     return this.request('POST', 'logs/query', params);
   };
   /** Used to create a subNotification of a specified notification. */
