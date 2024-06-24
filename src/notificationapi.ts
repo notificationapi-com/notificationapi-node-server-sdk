@@ -3,6 +3,7 @@ import {
   DeleteSubNotificationRequest,
   InAppNotificationPatchRequest,
   InitConfiguration,
+  queryLogsPostBody,
   RetractRequest,
   SendRequest,
   SetUserPreferencesRequest,
@@ -15,7 +16,7 @@ const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.1.0';
+  private VERSION = '2.2.0';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
@@ -68,6 +69,10 @@ class NotificationAPIService {
   /** Un-sending or deleting notifications: Sometimes you need older notifications to be deleted for a certain user. For example when a notification is not valid anymore. The retract function helps you do this. */
   retract = async (retractRequest: RetractRequest): Promise<AxiosResponse> => {
     return this.request('POST', 'sender/retract', retractRequest);
+  };
+  /** create a query on logs */
+  queryLogs = async (params: queryLogsPostBody): Promise<AxiosResponse> => {
+    return this.request('POST', 'logs/query', params);
   };
   /** Used to create a subNotification of a specified notification. */
   createSubNotification = async (
