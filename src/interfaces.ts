@@ -168,16 +168,66 @@ export interface InAppNotificationPatchRequest {
   };
 }
 export interface queryLogsPostBody {
+  /**
+   * Filters logs by a specific date range. Optional.
+   * The start and end times are represented as Unix timestamps.
+   */
   dateRangeFilter?: {
+    /**
+     * The start time of the date range filter as a Unix timestamp. Optional.
+     * Cannot be less than your log retention period.
+     */
     startTime?: number;
+    /** The end time of the date range filter as a Unix timestamp. Optional. */
     endTime?: number;
   };
+
+  /**
+   * Filters logs by specific notification IDs. Optional.
+   * This allows you to retrieve logs for particular notifications.
+   */
   notificationFilter?: string[];
+
+  /**
+   * Filters logs by specific channels. Optional.
+   * This allows you to retrieve logs for certain channels like EMAIL, SMS, etc.
+   */
   channelFilter?: Channels[];
+
+  /**
+   * Filters logs by specific user IDs. Optional.
+   * This allows you to retrieve logs for particular users.
+   */
   userFilter?: string[];
+
+  /**
+   * Filters logs by specific statuses. Optional.
+   * This allows you to retrieve logs with particular statuses like sent, failed, etc.
+   */
   statusFilter?: string[];
+
+  /**
+   * Filters logs by specific tracking IDs. Optional.
+   * This allows you to retrieve logs for particular tracking events.
+   */
   trackingIds?: string[];
+
+  /**
+   * Filters logs by specific body request of your send request. Optional.
+   * This allows you to retrieve logs for particular requests.
+   */
   requestFilter?: string[];
+
+  /**
+   * Filters logs by specific environment IDs. Optional.
+   * This allows you to retrieve logs for particular environments.
+   */
   envIdFilter?: string[];
+
+  /**
+   * A custom filter for querying logs. Optional.
+   * This allows for more advanced and flexible querying of logs.
+   * Note: custom filter overwrites all the filters.
+   */
   customFilter?: string;
 }
