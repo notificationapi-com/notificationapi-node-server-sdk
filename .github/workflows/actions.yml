@@ -8,7 +8,7 @@ jobs:
     name: Test & Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -17,7 +17,7 @@ jobs:
 
       - name: Cache node_modules
         id: cache-modules
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: 18.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
@@ -44,13 +44,23 @@ jobs:
         with:
           token: ${{ secrets.NODE_SERVER_SDK_NPM_AUTH_TOKEN }}
 
-      - name: Send Slack notification
+      - name: Send Slack notification on success
+        if: steps.publish.outputs.type != 'none' && success()
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo
+          fields: repo,message,commit,workflow,took
           text: Published to NPM ${{ steps.publish.outputs.old-version }} -> ${{ steps.publish.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: steps.publish.outputs.type != 'none' && always()
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SUCCESS_WEBHOOK_URL }}
+
+      - name: Send Slack notification on failure
+        if: steps.publish.outputs.type != 'none' && (failure() || cancelled())
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,workflow,took
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_FAILED_WEBHOOK_URL }}
