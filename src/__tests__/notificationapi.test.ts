@@ -91,7 +91,7 @@ describe('common API behavior', () => {
     // @ts-ignore
     await notificationapi[func](params);
     expect(axiosMock.history.post).toHaveLength(1);
-    expect(axiosMock.history.post[0].headers['Authorization']).toEqual(
+    expect(axiosMock.history.post[0].headers?.['Authorization']).toEqual(
       'Basic ' + cred
     );
   });
@@ -674,7 +674,7 @@ describe('deleteUserPreferences without subNotificationId', () => {
       `https://api.notificationapi.com/${clientId}/users/${userId}/preferences`
     );
     expect(axiosMock.history.delete[0].params).toEqual({ notificationId });
-    expect(axiosMock.history.delete[0].headers.Authorization).toEqual(
+    expect(axiosMock.history.delete[0].headers?.Authorization).toEqual(
       'Basic ' +
         Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
     );
@@ -707,7 +707,7 @@ describe('deleteUserPreferences with subNotificationId', () => {
       notificationId,
       subNotificationId
     });
-    expect(axiosMock.history.delete[0].headers.Authorization).toEqual(
+    expect(axiosMock.history.delete[0].headers?.Authorization).toEqual(
       'Basic ' +
         Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
     );
@@ -740,7 +740,7 @@ describe('updateInAppNotification without subNotificationId', () => {
       `https://api.notificationapi.com/${clientId}/users/${userId}/notifications/INAPP_WEB`
     );
     expect(axiosMock.history.patch[0].params).toEqual(undefined);
-    expect(axiosMock.history.patch[0].headers.Authorization).toEqual(
+    expect(axiosMock.history.patch[0].headers?.Authorization).toEqual(
       'Basic ' +
         Buffer.from(`${clientId}:${userId}:${hashedUserId}`).toString('base64')
     );
@@ -791,7 +791,7 @@ describe('Identify user', () => {
     expect(axiosMock.history.post[0].url).toEqual(
       `https://api.notificationapi.com/${clientId}/users/${id}`
     );
-    expect(axiosMock.history.post[0].headers.Authorization).toEqual(
+    expect(axiosMock.history.post[0].headers?.Authorization).toEqual(
       `Basic ${Buffer.from(
         `${clientId}:${userId}:${createHmac('sha256', clientSecret)
           .update(`${userId}`)
