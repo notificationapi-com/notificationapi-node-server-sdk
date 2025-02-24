@@ -1,6 +1,6 @@
 {
   "name": "notificationapi-node-server-sdk",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "NotificationAPI server-side library for Node.js",
   "keywords": [
     "notificationapi",
