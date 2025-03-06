@@ -12,7 +12,10 @@ import {
   PushProviders,
   SendRequest,
   SetUserPreferencesRequest,
-  User
+  User,
+  US_REGION,
+  EU_REGION,
+  CA_REGION
 } from '../interfaces';
 import { createHmac } from 'crypto';
 
@@ -797,6 +800,60 @@ describe('Identify user', () => {
           .update(`${userId}`)
           .digest('base64')}`
       ).toString('base64')}`
+    );
+  });
+});
+
+describe('region configuration', () => {
+  const clientId = 'testClientId';
+  const clientSecret = 'testClientSecret';
+
+  test('uses US region by default', async () => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret);
+    await notificationapi.send({
+      user: { id: 'test' },
+      notificationId: 'test'
+    });
+    expect(axiosMock.history.post[0].url).toEqual(
+      `${US_REGION}/${clientId}/sender`
+    );
+  });
+
+  test('uses EU region when specified', async () => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret, { baseURL: EU_REGION });
+    await notificationapi.send({
+      user: { id: 'test' },
+      notificationId: 'test'
+    });
+    expect(axiosMock.history.post[0].url).toEqual(
+      `${EU_REGION}/${clientId}/sender`
+    );
+  });
+
+  test('uses CA region when specified', async () => {
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret, { baseURL: CA_REGION });
+    await notificationapi.send({
+      user: { id: 'test' },
+      notificationId: 'test'
+    });
+    expect(axiosMock.history.post[0].url).toEqual(
+      `${CA_REGION}/${clientId}/sender`
+    );
+  });
+
+  test('uses custom URL when specified', async () => {
+    const customUrl = 'https://custom.notificationapi.com';
+    axiosMock.onAny().reply(200);
+    notificationapi.init(clientId, clientSecret, { baseURL: customUrl });
+    await notificationapi.send({
+      user: { id: 'test' },
+      notificationId: 'test'
+    });
+    expect(axiosMock.history.post[0].url).toEqual(
+      `${customUrl}/${clientId}/sender`
     );
   });
 });
