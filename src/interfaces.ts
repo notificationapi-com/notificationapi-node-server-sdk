@@ -100,9 +100,13 @@ export enum Channels {
   PUSH = 'PUSH',
   WEB_PUSH = 'WEB_PUSH'
 }
+/** Region constants for API endpoints */
+export const US_REGION = 'https://api.notificationapi.com';
+export const EU_REGION = 'https://api.eu.notificationapi.com';
+export const CA_REGION = 'https://api.ca.notificationapi.com';
 /** To configure the SDK*/
 export interface InitConfiguration {
-  /** To updated the based url. Optional.*/
+  /** To update the base url. Optional. Can be a region constant or a custom URL string. */
   baseURL?: string;
 }
 

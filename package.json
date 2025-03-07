@@ -1,6 +1,6 @@
 {
   "name": "notificationapi-node-server-sdk",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "NotificationAPI server-side library for Node.js",
   "keywords": [
     "notificationapi",
@@ -31,6 +31,7 @@
     "test": "jest --collectCoverage",
     "build": "tsc -p tsconfig.esm.json & tsc -p tsconfig.cjs.json && node scripts/build",
     "lint": "eslint . --ext .ts",
+    "prettier": "prettier --config .prettierrc './**/*.ts' --write",
     "prettier-check": "prettier --config .prettierrc './**/*.ts' --check"
   },
   "devDependencies": {
