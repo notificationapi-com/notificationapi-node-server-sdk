@@ -15,7 +15,7 @@ import { createHmac } from 'crypto';
 
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.2.1';
+  private VERSION = '2.3.1';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
