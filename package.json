@@ -22,6 +22,10 @@
     ".": {
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
+    },
+    "./interfaces": {
+      "import": "./lib/esm/interfaces.js",
+      "require": "./lib/cjs/interfaces.js"
     }
   },
   "files": [
