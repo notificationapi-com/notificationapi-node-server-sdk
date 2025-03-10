@@ -9,7 +9,7 @@ import {
   SendRequest,
   SetUserPreferencesRequest,
   User
-} from './interfaces';
+} from './interfaces.js';
 import axios, { AxiosResponse, Method } from 'axios';
 import { createHmac } from 'crypto';
 
