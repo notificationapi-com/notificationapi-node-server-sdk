@@ -100,14 +100,22 @@ export enum Channels {
   PUSH = 'PUSH',
   WEB_PUSH = 'WEB_PUSH'
 }
-/** Region constants for API endpoints */
-export const US_REGION = 'https://api.notificationapi.com';
-export const EU_REGION = 'https://api.eu.notificationapi.com';
-export const CA_REGION = 'https://api.ca.notificationapi.com';
+
+/** Region enum defines the available API endpoints for different geographical regions:
+ * - US_REGION: United States region endpoint (https://api.notificationapi.com)
+ * - EU_REGION: European Union region endpoint (https://api.eu.notificationapi.com)
+ * - CA_REGION: Canada region endpoint (https://api.ca.notificationapi.com)
+ */
+export enum Region {
+  US_REGION = 'https://api.notificationapi.com',
+  EU_REGION = 'https://api.eu.notificationapi.com',
+  CA_REGION = 'https://api.ca.notificationapi.com'
+}
+
 /** To configure the SDK*/
 export interface InitConfiguration {
   /** To update the base url. Optional. Can be a region constant or a custom URL string. */
-  baseURL?: string;
+  baseURL?: string | Region;
 }
 
 export interface PushToken {

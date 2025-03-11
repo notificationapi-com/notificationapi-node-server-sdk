@@ -4,22 +4,24 @@ import {
   InAppNotificationPatchRequest,
   InitConfiguration,
   queryLogsPostBody,
-  US_REGION,
+  Region,
   RetractRequest,
   SendRequest,
   SetUserPreferencesRequest,
   User
-} from './interfaces';
+} from './interfaces.js';
 import axios, { AxiosResponse, Method } from 'axios';
 import { createHmac } from 'crypto';
 
+const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
+
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.3.1';
+  private VERSION = '2.3.2';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
-  baseURL: string = US_REGION;
+  baseURL: string | Region = DEFAULT_BASE_URL;
   /** To configure and initialize the the SDK*/
   init = (
     clientId: string,
@@ -37,7 +39,7 @@ class NotificationAPIService {
     if (config?.baseURL) {
       this.baseURL = config.baseURL;
     } else {
-      this.baseURL = US_REGION;
+      this.baseURL = DEFAULT_BASE_URL;
     }
 
     this.clientId = clientId;

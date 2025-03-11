@@ -13,9 +13,7 @@ import {
   SendRequest,
   SetUserPreferencesRequest,
   User,
-  US_REGION,
-  EU_REGION,
-  CA_REGION
+  Region
 } from '../interfaces';
 import { createHmac } from 'crypto';
 
@@ -816,31 +814,31 @@ describe('region configuration', () => {
       notificationId: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
-      `${US_REGION}/${clientId}/sender`
+      `${Region.US_REGION}/${clientId}/sender`
     );
   });
 
   test('uses EU region when specified', async () => {
     axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret, { baseURL: EU_REGION });
+    notificationapi.init(clientId, clientSecret, { baseURL: Region.EU_REGION });
     await notificationapi.send({
       user: { id: 'test' },
       notificationId: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
-      `${EU_REGION}/${clientId}/sender`
+      `${Region.EU_REGION}/${clientId}/sender`
     );
   });
 
   test('uses CA region when specified', async () => {
     axiosMock.onAny().reply(200);
-    notificationapi.init(clientId, clientSecret, { baseURL: CA_REGION });
+    notificationapi.init(clientId, clientSecret, { baseURL: Region.CA_REGION });
     await notificationapi.send({
       user: { id: 'test' },
       notificationId: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
-      `${CA_REGION}/${clientId}/sender`
+      `${Region.CA_REGION}/${clientId}/sender`
     );
   });
 
