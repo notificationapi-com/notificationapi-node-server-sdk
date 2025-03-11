@@ -1,6 +1,6 @@
 {
   "name": "notificationapi-node-server-sdk",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "NotificationAPI server-side library for Node.js",
   "keywords": [
     "notificationapi",
@@ -22,6 +22,10 @@
     ".": {
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
+    },
+    "./interfaces": {
+      "import": "./lib/esm/interfaces.js",
+      "require": "./lib/cjs/interfaces.js"
     }
   },
   "files": [
