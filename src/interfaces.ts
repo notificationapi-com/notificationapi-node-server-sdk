@@ -37,7 +37,9 @@ export interface SendRequest {
   forceChannels?: Channels[];
   /** Parameters to be used in the notification template */
   parameters?: Record<string, unknown>;
-  /** It will be deprecated soon.*/
+  /**
+   * @deprecated Use subNotificationId instead
+   */
   secondaryId?: string;
   /** By default, notifications are sent using the default template of each channel. You can permanently change the default template from the dashboard. However, you can also use this parameter to force using a specific template. Optional.*/
   templateId?: string;
