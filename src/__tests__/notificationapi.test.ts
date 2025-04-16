@@ -157,8 +157,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      user,
-      notificationId
+      to: user,
+      type: notificationId
     });
     expect(axiosMock.history.post).toHaveLength(1);
     expect(axiosMock.history.post[0].url).toEqual(
@@ -172,8 +172,8 @@ describe('send', () => {
       baseURL: 'https://www.test.com'
     });
     await notificationapi.send({
-      user,
-      notificationId
+      to: user,
+      type: notificationId
     });
     expect(axiosMock.history.post).toHaveLength(1);
     expect(axiosMock.history.post[0].url).toEqual(
@@ -185,13 +185,13 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      user,
-      notificationId
+      to: user,
+      type: notificationId
     });
     expect(axiosMock.history.post).toHaveLength(1);
     expect(JSON.parse(axiosMock.history.post[0].data)).toEqual({
-      notificationId,
-      user
+      type: notificationId,
+      to: user
     });
   });
 
@@ -200,8 +200,8 @@ describe('send', () => {
     notificationapi.init(clientId, clientSecret);
     const mergeTags = { x: 'y' };
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       mergeTags
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -215,8 +215,8 @@ describe('send', () => {
     notificationapi.init(clientId, clientSecret);
     const replace = { x: 'y' };
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       replace
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -227,8 +227,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       secondaryId: 'secondary'
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -241,8 +241,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       templateId: 'templateId'
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -255,8 +255,8 @@ describe('send', () => {
     notificationapi.init(clientId, clientSecret);
     const schedule = new Date().toISOString();
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       schedule
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -268,8 +268,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       subNotificationId: 'subNotificationId'
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -282,8 +282,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       forceChannels: [Channels.EMAIL]
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -309,8 +309,8 @@ describe('send', () => {
     axiosMock.onPost(sendEndPointRegex).reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      notificationId,
-      user,
+      to: user,
+      type: notificationId,
       options: emailOptions
     });
     expect(axiosMock.history.post).toHaveLength(1);
@@ -810,8 +810,8 @@ describe('region configuration', () => {
     axiosMock.onAny().reply(200);
     notificationapi.init(clientId, clientSecret);
     await notificationapi.send({
-      user: { id: 'test' },
-      notificationId: 'test'
+      to: { id: 'test' },
+      type: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
       `${Region.US_REGION}/${clientId}/sender`
@@ -822,8 +822,8 @@ describe('region configuration', () => {
     axiosMock.onAny().reply(200);
     notificationapi.init(clientId, clientSecret, { baseURL: Region.EU_REGION });
     await notificationapi.send({
-      user: { id: 'test' },
-      notificationId: 'test'
+      to: { id: 'test' },
+      type: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
       `${Region.EU_REGION}/${clientId}/sender`
@@ -834,8 +834,8 @@ describe('region configuration', () => {
     axiosMock.onAny().reply(200);
     notificationapi.init(clientId, clientSecret, { baseURL: Region.CA_REGION });
     await notificationapi.send({
-      user: { id: 'test' },
-      notificationId: 'test'
+      to: { id: 'test' },
+      type: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
       `${Region.CA_REGION}/${clientId}/sender`
@@ -847,8 +847,8 @@ describe('region configuration', () => {
     axiosMock.onAny().reply(200);
     notificationapi.init(clientId, clientSecret, { baseURL: customUrl });
     await notificationapi.send({
-      user: { id: 'test' },
-      notificationId: 'test'
+      to: { id: 'test' },
+      type: 'test'
     });
     expect(axiosMock.history.post[0].url).toEqual(
       `${customUrl}/${clientId}/sender`

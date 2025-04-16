@@ -12,23 +12,38 @@ export interface User {
 }
 
 export interface SendRequest {
-  /** The ID of the notification in NotificationAPI. Required.*/
-  notificationId: string;
-  /** The user to send the notification to. Required.*/
-  user: User;
-  /** Used to pass in dynamic values into the notification design. Optional.*/
+  /**
+   * @deprecated Use type instead
+   */
+  notificationId?: string;
+  /**
+   * @deprecated Use to instead
+   */
+  user?: User;
+  /**
+   * @deprecated Use parameters instead
+   */
   mergeTags?: Record<string, unknown>;
-  /** Similar to mergeTags, but more flexible. Like the programmatic string replace function, this parameter will replace any string in the notification templates with another string. This operation happens on the fly when sending the notification and does not actually modify the templates. This operation is case-sensitive and happens after mergeTags are injected. Optional.*/
+  /**
+   * @deprecated
+   */
   replace?: Record<string, string>;
+
+  /** The type of notification to send, previously NotificationId */
+  type?: string;
+  /** The recipient of the notification */
+  to?: Partial<User>;
   /** Used to override the channels which are used for the notification. Optional.*/
   forceChannels?: Channels[];
-  /** It will be deprecated soon.*/
-  secondaryId?: string; //It will be deprecated soon
-  /**An ISO 8601 datetime string to schedule the notification for. For example, '2024-02-20T14:38:03.509Z' */
-  schedule?: string;
+  /** Parameters to be used in the notification template */
+  parameters?: Record<string, unknown>;
+  /**
+   * @deprecated Use subNotificationId instead
+   */
+  secondaryId?: string;
   /** By default, notifications are sent using the default template of each channel. You can permanently change the default template from the dashboard. However, you can also use this parameter to force using a specific template. Optional.*/
   templateId?: string;
-  /**  The subNotificationId is used to specify further subcategories within a notification. Optional.*/
+  /** The subNotificationId is used to specify further subcategories within a notification. Optional.*/
   subNotificationId?: string;
   /** You can dynamically modify certain notification behavior by passing in options. Optional.*/
   options?: {
@@ -54,6 +69,38 @@ export interface SendRequest {
         url: string;
       }[];
     };
+  };
+  /** An ISO 8601 datetime string to schedule the notification for. For example, '2024-02-20T14:38:03.509Z' */
+  schedule?: string;
+
+  // Channel-specific options
+  email?: {
+    subject: string;
+    html: string;
+    previewText?: string;
+    senderName?: string;
+    senderEmail?: string;
+  };
+  inapp?: {
+    title: string;
+    url?: string;
+    image?: string;
+  };
+  sms?: {
+    message: string;
+  };
+  call?: {
+    message: string;
+  };
+  web_push?: {
+    title: string;
+    message: string;
+    icon?: string;
+    url?: string;
+  };
+  mobile_push?: {
+    title: string;
+    message: string;
   };
 }
 
