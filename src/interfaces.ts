@@ -1,3 +1,5 @@
+import { KnownBlock } from '@slack/types';
+
 export interface User {
   /** The ID of the user in your system. Required.*/
   id: string;
@@ -9,6 +11,54 @@ export interface User {
   pushTokens?: PushToken[];
   /**Tokens which are required to send web push notification, a user can have multiple devices and a web push token is required for each device */
   webPushTokens?: WebPushToken[];
+  /** The user's timezone. Optional. */
+  timezone?: string;
+  /** The last time the user was seen. Optional. */
+  lastSeenTime?: string;
+  /** The user's Slack channel name. Optional. */
+  slackChannelName?: string;
+  /** The user's Slack token (OAuth). Optional. */
+  slackToken?: {
+    access_token?: string;
+    app_id?: string;
+    authed_user?: {
+      access_token?: string;
+      expires_in?: number;
+      id?: string;
+      refresh_token?: string;
+      scope?: string;
+      token_type?: string;
+    };
+    bot_user_id?: string;
+    enterprise?: {
+      id?: string;
+      name?: string;
+    };
+    error?: string;
+    expires_in?: number;
+    incoming_webhook?: {
+      channel?: string;
+      channel_id?: string;
+      configuration_url?: string;
+      url?: string;
+    };
+    is_enterprise_install?: boolean;
+    needed?: string;
+    ok?: boolean;
+    provided?: string;
+    refresh_token?: string;
+    scope?: string;
+    team?: {
+      id?: string;
+      name?: string;
+    };
+    token_type?: string;
+    warning?: string;
+  };
+  /** The time the user was last updated. Optional. */
+  updatedAt?: string;
+  /** The time the user was created. Optional. */
+  createdAt?: string;
 }
 
 export interface SendRequest {
@@ -69,6 +119,23 @@ export interface SendRequest {
         url: string;
       }[];
     };
+    apn?: {
+      expiry?: number;
+      priority?: number;
+      collapseId?: string;
+      threadId?: string;
+      badge?: number;
+      sound?: string;
+      contentAvailable?: boolean;
+    };
+    fcm?: {
+      android?: {
+        collapseKey?: string;
+        priority?: 'high' | 'normal';
+        ttl?: number;
+        restrictedPackageName?: string;
+      };
+    };
   };
   /** An ISO 8601 datetime string to schedule the notification for. For example, '2024-02-20T14:38:03.509Z' */
   schedule?: string;
@@ -101,6 +168,10 @@ export interface SendRequest {
   mobile_push?: {
     title: string;
     message: string;
+  };
+  slack?: {
+    text: string;
+    blocks?: KnownBlock[];
   };
 }
 
