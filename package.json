@@ -17,11 +17,21 @@
     "url": "https://github.com/notificationapi-com/notificationapi-node-server-sdk/issues"
   },
   "homepage": "https://www.notificationapi.com",
+  "main": "./lib/cjs/index.js",
+  "types": "./lib/cjs/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/cjs/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./lib/cjs/index.d.ts"
+      ]
     }
   },
   "files": [
