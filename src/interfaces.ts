@@ -109,15 +109,14 @@ export interface SendRequest {
       fromName?: string;
       /** An address that is displayed as the "from" field. Example: "Name <fromaddress>". Optional. */
       fromAddress?: string;
-      /** An array of publicly accessible URLs and filenames pointing to files that you wish to include as attachments.
-       * The URLs only need to be valid for a few minutes after calling the SDK method. After that, the public URLs can be disabled for privacy. The maximum email size (including the content and all attachments) is 10MB.
+      /** An array of attachments that can be either URL-based or content-based.
+       * URL-based: Publicly accessible URLs and filenames pointing to files. The URLs only need to be valid for a few minutes after calling the SDK method.  After that, the public URLs can be disabled for privacy. The maximum email size (including the content and all attachments) is 10MB.
+       * Content-based: Direct content with filename and optional contentType.
        * File extensions in the filename property are necessary for the file to show up nicely in the recipient's device. Optional.*/
-      attachments?: {
-        /** File extensions in the filename property are necessary for the file to show up nicely in the recipient's device.*/
-        filename: string;
-        /** The URLs only need to be valid for a few minutes after calling the SDK method. After that, the public URLs can be disabled for privacy. The maximum email size (including the content and all attachments) is 10MB.*/
-        url: string;
-      }[];
+      attachments?: Array<
+        | { filename: string; url: string }
+        | { filename: string; content: string; contentType?: string }
+      >;
     };
     apn?: {
       expiry?: number;
