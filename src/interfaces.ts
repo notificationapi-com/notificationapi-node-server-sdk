@@ -117,6 +117,7 @@ export interface SendRequest {
         | { filename: string; url: string }
         | { filename: string; content: string; contentType?: string }
       >;
+      condition?: string;
     };
     apn?: {
       expiry?: number;
