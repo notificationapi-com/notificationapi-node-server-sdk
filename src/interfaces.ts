@@ -13,10 +13,16 @@ export interface User {
   webPushTokens?: WebPushToken[];
   /** The user's timezone. Optional. */
   timezone?: string;
-  /** The last time the user was seen. Optional. */
-  lastSeenTime?: string;
-  /** The user's Slack channel name. Optional. */
-  slackChannelName?: string;
+  /**
+   * The destination channel of slack notifications sent to this user.
+   * Can be either of the following:
+   * - Channel name, e.g. "test"
+   * - Channel name with # prefix, e.g. "#test"
+   * - Channel ID, e.g. "C1234567890"
+   * - User ID for DM, e.g. "U1234567890"
+   * - Username with @ prefix, e.g. "@test"
+   */
+  slackChannel?: string;
   /** The user's Slack token (OAuth). Optional. */
   slackToken?: {
     access_token?: string;
