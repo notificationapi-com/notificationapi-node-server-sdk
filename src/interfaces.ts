@@ -67,6 +67,46 @@ export interface User {
   createdAt?: string;
 }
 
+/** Configuration for SMS auto-reply functionality. */
+export interface SmsAutoReply {
+  /** The message to send as an auto-reply. */
+  message: string;
+}
+
+/** Slack message metadata for event tracking. */
+interface SlackMessageMetadata {
+  /** A human readable alphanumeric string representing your application's metadata event. */
+  event_type: string;
+  /** A free-form object containing whatever data your application wishes to attach to messages. */
+  event_payload: Record<string, unknown>;
+}
+
+/** Slack entity metadata for work objects. */
+interface SlackEntityMetadata {
+  /** Entity type (e.g., 'slack#/entities/task', 'slack#/entities/file'). */
+  entity_type: string;
+  /** Schema for the given entity type. */
+  entity_payload: Record<string, unknown>;
+  /** Reference used to identify an entity within the developer's system. */
+  external_ref: {
+    id: string;
+    type?: string;
+  };
+  /** URL used to identify an entity within the developer's system. */
+  url: string;
+  /** The exact URL posted in the source message. Required in metadata passed to `chat.unfurl`. */
+  app_unfurl_url?: string;
+}
+
+/**
+ * Slack message metadata with optional work object entities.
+ * Combines standard Slack message metadata fields with an array of entity objects.
+ */
+export type SlackMessageMetadataWithEntities = Partial<SlackMessageMetadata> & {
+  /** An array of work object entities. */
+  entities?: SlackEntityMetadata[];
+};
+
 export interface SendRequest {
   /**
    * @deprecated Use type instead
@@ -160,7 +200,9 @@ export interface SendRequest {
     image?: string;
   };
   sms?: {
-    message: string;
+    message?: string;
+    /** Auto-reply configuration for inbound SMS messages. Optional. */
+    autoReply?: SmsAutoReply;
   };
   call?: {
     message: string;
@@ -178,6 +220,26 @@ export interface SendRequest {
   slack?: {
     text: string;
     blocks?: KnownBlock[];
+    /** Custom username for the message. Optional. */
+    username?: string;
+    /** Icon to use for the message. Can be an emoji (e.g., ':smile:') or a URL to a custom image. Optional. */
+    icon?: string;
+    /** Provide another message's `ts` value to post this message in a thread. Avoid using a reply's `ts` value; use its parent's value instead. Optional. */
+    thread_ts?: string;
+    /** Used in conjunction with thread_ts. When set to true, broadcasts the reply to the channel. Optional. */
+    reply_broadcast?: boolean;
+    /** Change how messages are treated. 'full' enables automatic parsing of URLs into clickable links, 'none' leaves text as-is. Optional. */
+    parse?: 'full' | 'none';
+    /** Find and link channel names and usernames. When true, plain text references like "#general" and "@john" are converted to actual Slack links. Optional. */
+    link_names?: boolean;
+    /** Disable Slack markup parsing (formatting like *bold*, _italic_, `code`) by setting to false. Enabled by default. Optional. */
+    mrkdwn?: boolean;
+    /** Pass true to enable unfurling (showing rich previews) of primarily text-based content. Optional. */
+    unfurl_links?: boolean;
+    /** Pass false to disable unfurling (showing rich previews) of media content. Optional. */
+    unfurl_media?: boolean;
+    /** Object representing message metadata, which will be made accessible to any user or app. Optional. */
+    metadata?: SlackMessageMetadataWithEntities;
   };
 }
 

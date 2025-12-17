@@ -17,7 +17,7 @@ const DEFAULT_BASE_URL = 'https://api.notificationapi.com';
 
 class NotificationAPIService {
   private USER_AGENT = 'notificationapi-node-server-sdk';
-  private VERSION = '2.7.1';
+  private VERSION = '2.8.0';
 
   clientId: null | string = null;
   clientSecret: null | string = null;
